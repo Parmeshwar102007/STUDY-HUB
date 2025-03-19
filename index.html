@@ -55,19 +55,6 @@
 
     <!-- Start Button -->
     <button class="button" onclick="showClassSelection()">Start</button>
-
-    <!-- Class Selection -->
-    <div id="classSelection" class="hidden">
-        <h2>Select Your Class</h2>
-        <select id="classSelect">
-            <option value="class10">Class 10</option>
-            <option value="class12">Class 12</option>
-            <option value="jee">JEE</option>
-            <option value="neet">NEET</option>
-        </select>
-        <button class="button" onclick="redirectToDashboard()">Proceed</button>
-    </div>
-
     <script>
         function showClassSelection() {
             document.getElementById("classSelection").classList.remove("hidden");
