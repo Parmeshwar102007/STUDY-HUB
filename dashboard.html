@@ -222,47 +222,9 @@
         let calculator = document.getElementById("calculator");
         calculator.style.display = (calculator.style.display === "block") ? "none" : "block";
     }
-</script>Restored Calculator -->
+</script>
     
-           
-        function toggleMenu() {
-            let menu = document.getElementById("dropdownMenu");
-            menu.style.display = (menu.style.display === "block") ? "none" : "block";
-        }
-
-        function showContent(sectionId) {
-            document.getElementById(sectionId).style.display = "block";
-        }
-
-        function closeContent(sectionId) {
-            document.getElementById(sectionId).style.display = "none";
-        }
-
-        function toggleCalculator() {
-            let calculator = document.getElementById("calculator");
-            calculator.style.display = (calculator.style.display === "block") ? "none" : "block";
-        }
-
-        function appendCalc(value) {
-            document.getElementById("calcDisplay").value += value;
-        }
-
-        function calculate() {
-            try {
-                document.getElementById("calcDisplay").value = eval(document.getElementById("calcDisplay").value);
-            } catch {
-                document.getElementById("calcDisplay").value = "Error!";
-            }
-        }
-
-        function clearCalc() {
-            document.getElementById("calcDisplay").value = "";
-        }
-
-        function backspaceCalc() {
-            let input = document.getElementById("calcDisplay").value;
-            document.getElementById("calcDisplay").value = input.slice(0, -1);
-        }
+     }
     </script>
 
 </body>
