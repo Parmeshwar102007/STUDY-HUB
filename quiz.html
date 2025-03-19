@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Quiz Game</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #1E88E5;
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .quiz-container {
+            background: white;
+            color: black;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        .quiz-container h2 {
+            margin-bottom: 15px;
+        }
+        .quiz-container button {
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            background: #1565C0;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+        .quiz-container button:hover {
+            background: #0D47A1;
+        }
+        .quiz-container h3 {
+            margin-top: 10px;
+            font-size: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <h2>Math Quiz Game</h2>
+        <h3 id="question">Loading...</h3>
+        <div id="choices"></div>
+        <h3 id="quizScore">Score: 0</h3>
+        <button onclick="window.location.href='dashboard.html'">Back to Dashboard</button> <!-- Back Button -->
+    </div>
+
+    <script>
+        const quizData = [
+            { question: "What is 7 + 3?", answers: ["8", "9", "10", "11"], correct: "10" },
+            { question: "What is 5 × 6?", answers: ["30", "25", "35", "40"], correct: "30" },
+            { question: "What is 12 ÷ 4?", answers: ["4", "3", "6", "2"], correct: "3" },
+            { question: "What is 15 - 7?", answers: ["5", "7", "8", "9"], correct: "8" },
+            { question: "What is 9 × 2?", answers: ["18", "16", "20", "22"], correct: "18" }
+        ];
+        
+        let quizScore = 0;
+        let currentQuestionIndex = 0;
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= quizData.length) {
+                document.getElementById("question").innerText = "Quiz Over!";
+                document.getElementById("choices").innerHTML = `<h3>Your final score: ${quizScore}</h3>`;
+                return;
+            }
+
+            let questionObj = quizData[currentQuestionIndex];
+            document.getElementById("question").innerText = questionObj.question;
+            document.getElementById("choices").innerHTML = "";
+
+            questionObj.answers.forEach(answer => {
+                let btn = document.createElement("button");
+                btn.innerText = answer;
+                btn.onclick = () => checkAnswer(answer);
+                document.getElementById("choices").appendChild(btn);
+            });
+        }
+
+        function checkAnswer(answer) {
+            if (answer === quizData[currentQuestionIndex].correct) {
+                quizScore++;
+                document.getElementById("quizScore").innerText = `Score: ${quizScore}`;
+            }
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        // Load the first question
+        document.addEventListener("DOMContentLoaded", loadQuestion);
+    </script>
+
+</body>
+</html>
