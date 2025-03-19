@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Portal</title>
+    <style>
+        body {
+            text-align: center;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        .logo {
+            margin-top: 50px;
+            width: 300px;
+        }
+        .start-button, .search-button, .login-button, .logout-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .start-button:hover, .search-button:hover, .login-button:hover, .logout-button:hover {
+            background-color: #0056b3;
+        }
+        .hidden {
+            display: none;
+        }
+        select {
+            padding: 10px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Logo -->
+    <img src="https://raw.githubusercontent.com/Parmeshwar102007/QUIZ/main/SsMART%20qUIZMART%20s_20250319_103933_0000.png" 
+         alt="Quiz Logo" class="logo">
+
+    <!-- Start Button -->
+    <button class="start-button" onclick="showClassSelection()">Start</button>
+
+    <!-- Class Selection (Initially Hidden) -->
+    <div id="classSelection" class="hidden">
+        <h2>Select Your Class</h2>
+        <select id="classSelect">
+            <option value="class10">Class 10</option>
+            <option value="class12">Class 12</option>
+            <option value="jee">JEE</option>
+            <option value="neet">NEET</option>
+        </select>
+        <button class="search-button" onclick="goToLogin()">Proceed</button>
+    </div>
+
+    <!-- Login Form (Initially Hidden) -->
+    <div id="loginForm" class="hidden">
+        <h2>Login to Track Progress</h2>
+        <input type="email" id="email" placeholder="Enter your email">
+        <input type="password" id="password" placeholder="Enter your password">
+        <button class="login-button" onclick="loginUser()">Login</button>
+        <p>Don't have an account? <a href="#" onclick="showRegister()">Register here</a></p>
+    </div>
+
+    <!-- Register Form (Initially Hidden) -->
+    <div id="registerForm" class="hidden">
+        <h2>Register</h2>
+        <input type="text" id="regName" placeholder="Enter your name">
+        <input type="email" id="regEmail" placeholder="Enter your email">
+        <input type="password" id="regPassword" placeholder="Enter your password">
+        <button class="login-button" onclick="registerUser()">Register</button>
+    </div>
+
+    <!-- User Dashboard (Initially Hidden) -->
+    <div id="dashboard" class="hidden">
+        <h2>Welcome, <span id="userEmail"></span>!</h2>
+        <p>Your Quiz Progress (Coming Soon...)</p>
+        <button class="logout-button" onclick="logoutUser()">Logout</button>
+    </div>
+
+    <script>
+        function showClassSelection() {
+            document.getElementById("classSelection").classList.remove("hidden");
+        }
+
+        function goToLogin() {
+            document.getElementById("classSelection").classList.add("hidden");
+            document.getElementById("loginForm").classList.remove("hidden");
+        }
+
+        function loginUser() {
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+            if (email === "" || password === "") {
+                alert("Please enter your credentials");
+            } else {
+                localStorage.setItem("userEmail", email);
+                document.getElementById("loginForm").classList.add("hidden");
+                document.getElementById("dashboard").classList.remove("hidden");
+                document.getElementById("userEmail").innerText = email;
+            }
+        }
+
+        function showRegister() {
+            document.getElementById("loginForm").classList.add("hidden");
+            document.getElementById("registerForm").classList.remove("hidden");
+        }
+
+        function registerUser() {
+            var name = document.getElementById("regName").value;
+            var email = document.getElementById("regEmail").value;
+            var password = document.getElementById("regPassword").value;
+            if (name === "" || email === "" || password === "") {
+                alert("Please fill all fields");
+            } else {
+                alert("Registration successful! Please log in.");
+                document.getElementById("registerForm").classList.add("hidden");
+                document.getElementById("loginForm").classList.remove("hidden");
+            }
+        }
+
+        function logoutUser() {
+            localStorage.removeItem("userEmail");
+            document.getElementById("dashboard").classList.add("hidden");
+            document.getElementById("loginForm").classList.remove("hidden");
+        }
+
+        window.onload = function() {
+            var email = localStorage.getItem("userEmail");
+            if (email) {
+                document.getElementById("dashboard").classList.remove("hidden");
+                document.getElementById("userEmail").innerText = email;
+            }
+        };
+    </script>
+
+</body>
+</html>
