@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Quiz Portal</title>
+    <style>
+        /* General Styles */
+        body {
+            text-align: center;
+            background: linear-gradient(to right, #141E30, #243B55);
+            color: #fff;
+            font-family: "Poppins", sans-serif;
+        }
+        .logo {
+            margin-top: 50px;
+            width: 300px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 20px;
+            background: linear-gradient(135deg, #ff7eb3, #ff758c);
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+            box-shadow: 0px 4px 10px rgba(255, 117, 140, 0.5);
+        }
+        .button:hover {
+            background: linear-gradient(135deg, #ff758c, #ff7eb3);
+            transform: scale(1.05);
+        }
+        .hidden {
+            display: none;
+        }
+        select {
+            padding: 12px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            background: #fff;
+            color: #333;
+        }
+        #dashboard {
+            background: #fff;
+            color: #333;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+        .menu button {
+            display: block;
+            width: 220px;
+            margin: 15px auto;
+            padding: 15px;
+            font-size: 18px;
+            background: linear-gradient(135deg, #36D1DC, #5B86E5);
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .menu button:hover {
+            background: linear-gradient(135deg, #5B86E5, #36D1DC);
+            transform: scale(1.05);
+        }
+        .content {
+            display: none;
+            background: #f8f9fa;
+            color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Logo -->
+    <img src="https://raw.githubusercontent.com/Parmeshwar102007/QUIZ/main/SsMART%20qUIZMART%20s_20250319_103933_0000.png" 
+         alt="Quiz Logo" class="logo">
+
+    <!-- Start Button -->
+    <button class="button" onclick="showClassSelection()">Start</button>
+
+    <!-- Class Selection -->
+    <div id="classSelection" class="hidden">
+        <h2>Select Your Class</h2>
+        <select id="classSelect">
+            <option value="class10">Class 10</option>
+            <option value="class12">Class 12</option>
+            <option value="jee">JEE</option>
+            <option value="neet">NEET</option>
+        </select>
+        <button class="button" onclick="showDashboard()">Proceed</button>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="hidden">
+        <h1>Welcome to Your Dashboard</h1>
+        <div class="menu">
+            <button onclick="showContent('mainMenu')">Main Menu</button>
+            <button onclick="showContent('startStudy')">Start Study</button>
+            <button onclick="goToNCERTBooks()">NCERT Books</button>
+            <button onclick="showContent('quizSection')">Quiz</button>
+            <button onclick="showContent('communitySection')">Community Section</button>
+        </div>
+    </div>
+
+    <!-- Main Menu Content -->
+    <div id="mainMenu" class="content">
+        <h2>Main Menu</h2>
+        <p>Here you will find the main navigation and important links.</p>
+    </div>
+
+    <!-- Start Study Content -->
+    <div id="startStudy" class="content">
+        <h2>Start Study</h2>
+        <p>Study materials and resources will be available here.</p>
+    </div>
+
+    <!-- Quiz Section Content -->
+    <div id="quizSection" class="content">
+        <h2>Quiz Section</h2>
+        <p>The interactive quiz will be implemented soon. Stay tuned!</p>
+    </div>
+
+    <!-- Community Section -->
+    <div id="communitySection" class="content">
+        <h2>Community Doubt Solver</h2>
+        <textarea id="doubtInput" placeholder="Ask your doubt..."></textarea>
+        <button class="button" onclick="postDoubt()">Post Doubt</button>
+        <div id="doubtList"></div>
+    </div>
+
+    <script>
+        function showClassSelection() {
+            document.getElementById("classSelection").classList.remove("hidden");
+            document.querySelector(".button").style.display = "none"; // Hide Start button
+        }
+
+        function showDashboard() {
+            document.getElementById("classSelection").classList.add("hidden");
+            document.getElementById("dashboard").classList.remove("hidden");
+        }
+
+        function showContent(sectionId) {
+            var sections = document.querySelectorAll('.content');
+            sections.forEach(section => section.style.display = "none");
+
+            document.getElementById(sectionId).style.display = "block";
+        }
+
+        function goToNCERTBooks() {
+            window.location.href = "https://ncert.nic.in/textbook.php"; // Redirect to NCERT books
+        }
+
+        function postDoubt() {
+            let doubtText = document.getElementById("doubtInput").value;
+            if (doubtText.trim() === "") {
+                alert("Please enter a doubt.");
+                return;
+            }
+
+            let doubtList = document.getElementById("doubtList");
+            let doubtDiv = document.createElement("div");
+            doubtDiv.classList.add("doubt");
+            doubtDiv.innerHTML = `<p><strong>Doubt:</strong> ${doubtText}</p>
+                                  <textarea class="replyInput" placeholder="Reply to this doubt..."></textarea>
+                                  <button class="button replyButton" onclick="postReply(this)">Reply</button>
+                                  <div class="replyList"></div>`;
+
+            doubtList.prepend(doubtDiv);
+            document.getElementById("doubtInput").value = "";
+            saveDoubts();
+        }
+
+        function postReply(button) {
+            let replyText = button.previousElementSibling.value;
+            if (replyText.trim() === "") {
+                alert("Please enter a reply.");
+                return;
+            }
+
+            let replyList = button.nextElementSibling;
+            let replyDiv = document.createElement("div");
+            replyDiv.classList.add("reply");
+            replyDiv.innerHTML = `<p>${replyText}</p>`;
+            
+            replyList.appendChild(replyDiv);
+            button.previousElementSibling.value = "";
+            saveDoubts();
+        }
+
+        function saveDoubts() {
+            localStorage.setItem("doubts", document.getElementById("doubtList").innerHTML);
+        }
+
+        function loadDoubts() {
+            let savedDoubts = localStorage.getItem("doubts");
+            if (savedDoubts) {
+                document.getElementById("doubtList").innerHTML = savedDoubts;
+            }
+        }
+
+        window.onload = loadDoubts;
+    </script>
+
+</body>
+</html>
