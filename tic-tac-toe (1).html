@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(to right, #1E88E5, #1565C0);
+            color: white;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 5px;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            font-size: 24px;
+            font-weight: bold;
+            background: white;
+            color: black;
+            border: none;
+            cursor: pointer;
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="game.html" class="back-button">&#8592;</a>
+    <div class="container">
+        <h1>Tic-Tac-Toe</h1>
+        <div class="grid" id="board">
+            <button class="cell" onclick="makeMove(0)"></button>
+            <button class="cell" onclick="makeMove(1)"></button>
+            <button class="cell" onclick="makeMove(2)"></button>
+            <button class="cell" onclick="makeMove(3)"></button>
+            <button class="cell" onclick="makeMove(4)"></button>
+            <button class="cell" onclick="makeMove(5)"></button>
+            <button class="cell" onclick="makeMove(6)"></button>
+            <button class="cell" onclick="makeMove(7)"></button>
+            <button class="cell" onclick="makeMove(8)"></button>
+        </div>
+        <h2 id="status"></h2>
+        <button onclick="resetGame()">Restart</button>
+    </div>
+
+    <script>
+        let board = ["", "", "", "", "", "", "", "", ""];
+        let currentPlayer = "X";
+
+        function makeMove(index) {
+            if (board[index] === "") {
+                board[index] = currentPlayer;
+                document.getElementsByClassName("cell")[index].innerText = currentPlayer;
+                if (checkWinner()) {
+                    document.getElementById("status").innerText = currentPlayer + " Wins!";
+                    disableBoard();
+                } else {
+                    currentPlayer = currentPlayer === "X" ? "O" : "X";
+                }
+            }
+        }
+
+        function checkWinner() {
+            const winningCombos = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6]
+            ];
+            return winningCombos.some(combo => {
+                return board[combo[0]] && board[combo[0]] === board[combo[1]] && board[combo[1]] === board[combo[2]];
+            });
+        }
+
+        function disableBoard() {
+            document.querySelectorAll(".cell").forEach(cell => cell.disabled = true);
+        }
+
+        function resetGame() {
+            board = ["", "", "", "", "", "", "", "", ""];
+            currentPlayer = "X";
+            document.querySelectorAll(".cell").forEach(cell => {
+                cell.innerText = "";
+                cell.disabled = false;
+            });
+            document.getElementById("status").innerText = "";
+        }
+    </script>
+
+</body>
+</html>
