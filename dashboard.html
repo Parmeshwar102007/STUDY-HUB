@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            text-align: center;
+            background: url('https://raw.githubusercontent.com/Parmeshwar102007/QUIZ/main/IIT_Delhi_administrative_building.jpg') no-repeat center center/cover;
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .container {
+            width: 80%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 32px;
+            cursor: pointer;
+            color: black;
+            font-weight: bold;
+        }
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background: white;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            width: 200px;
+            text-align: left;
+        }
+        .dropdown a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: black;
+            font-size: 16px;
+        }
+        .dropdown a:hover {
+            background: #f1f1f1;
+        }
+        .menu-options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .menu-options button {
+            width: 250px;
+            padding: 15px;
+            font-size: 20px;
+            margin: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+            transition: 0.3s;
+            border-radius: 5px;
+        }
+        .menu-options button:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Three-dot Menu (Main Menu) -->
+    <div class="menu" onclick="toggleMenu()">⋮</div>
+    <div class="dropdown" id="dropdownMenu">
+        <a href="index.html">Homepage</a>
+        <a href="#" onclick="showContent('feedbackSection')">Feedback</a>
+        <a href="#" onclick="showContent('contactSection')">Contact</a>
+        <a href="#">Other Useful Links</a>
+    </div>
+
+    <div class="container">
+        <div class="menu-options">
+            <button onclick="showContent('startStudy')">Start Study</button>
+            <button onclick="goToNCERTBooks()">NCERT Books</button>
+            <button onclick="toggleCalculator()">Calculator</button>
+            <button onclick="showContent('pyqs')">PYQs</button> <!-- New PYQs Button -->
+            <button onclick="window.location.href='quiz.html'">Quiz</button>
+        </div>
+    </div>
+
+    <!-- Feedback Section -->
+    <div id="feedbackSection" class="content container">
+        <h2>Feedback</h2>
+        <textarea placeholder="Write your feedback here..." style="width: 100%; height: 100px;"></textarea>
+    </div>
+
+    <!-- Contact Section -->
+    <div id="contactSection" class="content container">
+        <h2>Contact</h2>
+        <p>Please contact Parmeshwar for any help and support.</p>
+    </div>
+
+    <!-- PYQs Section -->
+    <div id="pyqs" class="content container">
+        <h2>Previous Year Questions</h2>
+        <p>Here, you can access previous year question papers.</p>
+    </div>
+
+    <!-- Hidden Calculator Section -->
+    <div id="calculator" class="content container">
+        <div class="calculator">
+            <h2>Advanced Calculator</h2>
+            <div class="input-row">
+                <input type="number" id="num1" placeholder="Number 1">
+                <select id="operation">
+                    <option value="+">+</option>
+                    <option value="-">−</option>
+                    <option value="*">×</option>
+                    <option value="/">÷</option>
+                    <option value="^">^</option>
+                </select>
+                <input type="number" id="num2" placeholder="Number 2">
+            </div>
+            <button onclick="calculate()">Calculate</button>
+            <h3 id="calcResult">Result: --</h3>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            let menu = document.getElementById("dropdownMenu");
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
+        }
+
+        function showContent(sectionId) {
+            document.querySelectorAll('.content').forEach(section => section.style.display = "none");
+            document.getElementById(sectionId).style.display = "block";
+        }
+
+        function toggleCalculator() {
+            let calculator = document.getElementById("calculator");
+            calculator.style.display = (calculator.style.display === "block") ? "none" : "block";
+        }
+
+        function goToNCERTBooks() {
+            window.location.href = "https://ncert.nic.in/textbook.php";
+        }
+
+        function calculate() {
+            let num1 = parseFloat(document.getElementById("num1").value);
+            let num2 = parseFloat(document.getElementById("num2").value);
+            let operation = document.getElementById("operation").value;
+            let result;
+
+            if (isNaN(num1) || isNaN(num2)) {
+                document.getElementById("calcResult").innerText = "Please enter valid numbers.";
+                return;
+            }
+
+            switch (operation) {
+                case "+": result = num1 + num2; break;
+                case "-": result = num1 - num2; break;
+                case "*": result = num1 * num2; break;
+                case "/": result = num2 !== 0 ? num1 / num2 : "Error: Division by zero!"; break;
+                case "^": result = Math.pow(num1, num2); break;
+                default: result = "Invalid Operation";
+            }
+
+            document.getElementById("calcResult").innerText = "Result: " + result;
+        }
+    </script>
+
+</body>
+</html>
