@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Your Study</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(to right, #000000, #2c2c2c);
+            color: white;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #FFD700;
+        }
+        .clock {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        .timer-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: auto;
+        }
+        .circle-clock {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            border: 3px solid white;
+        }
+        .arrow {
+            position: absolute;
+            width: 5px;
+            height: 50px;
+            background: red;
+            top: 50%;
+            left: 50%;
+            transform-origin: bottom center;
+            transform: translate(-50%, -100%) rotate(0deg);
+            border-radius: 5px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .button {
+            background: #FFD700;
+            color: black;
+            font-size: 18px;
+            padding: 12px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.3s;
+            font-weight: bold;
+            box-shadow: 0px 4px 10px rgba(255, 215, 0, 0.5);
+        }
+        .button:hover {
+            background: #FFC107;
+            box-shadow: 0px 4px 15px rgba(255, 215, 0, 0.8);
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Back Arrow Button -->
+    <a href="dashboard.html" class="back-button">&#8592;</a>
+
+    <div class="container">
+        <h1>Track Your Study</h1>
+
+        <!-- Real-Time Clock in 12-hour format -->
+        <div class="clock" id="clock">Loading time...</div>
+
+        <!-- Black Circular Clock with Rotating Arrow -->
+        <div class="timer-container">
+            <div class="circle-clock">
+                <div class="arrow" id="arrow"></div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="button" onclick="startTimer()">Start</button>
+            <button class="button" onclick="pauseTimer()">Pause</button>
+            <button class="button" onclick="resetTimer()">Reset</button>
+        </div>
+    </div>
+
+    <script>
+        // Update real-time clock in 12-hour format (No Seconds)
+        function updateClock() {
+            let now = new Date();
+            let hours = now.getHours();
+            let minutes = String(now.getMinutes()).padStart(2, '0');
+            let ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12; // Convert to 12-hour format
+            document.getElementById("clock").innerText = `Current Time: ${hours}:${minutes} ${ampm}`;
+        }
+        setInterval(updateClock, 1000);
+
+        // Study Timer with Rotating Arrow
+        let timer;
+        let totalSeconds = 0;
+        let running = false;
+
+        function updateTimerDisplay() {
+            let percentage = (totalSeconds % 60) * 6; // 6 degrees per second
+            document.getElementById("arrow").style.transform = `translate(-50%, -100%) rotate(${percentage}deg)`;
+        }
+
+        function startTimer() {
+            if (!running) {
+                running = true;
+                timer = setInterval(() => {
+                    totalSeconds++;
+                    updateTimerDisplay();
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            running = false;
+            clearInterval(timer);
+        }
+
+        function resetTimer() {
+            running = false;
+            clearInterval(timer);
+            totalSeconds = 0;
+            updateTimerDisplay();
+        }
+    </script>
+
+</body>
+</html>
