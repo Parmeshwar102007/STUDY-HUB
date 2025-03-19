@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Portal</title>
+    <style>
+        body {
+            text-align: center;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        .logo {
+            margin-top: 50px;
+            width: 300px;
+        }
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .hidden {
+            display: none;
+        }
+        select, input {
+            padding: 10px;
+            font-size: 18px;
+            margin: 10px;
+        }
+        #dashboard {
+            background: #fff;
+            color: #000;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Logo -->
+    <img src="https://raw.githubusercontent.com/Parmeshwar102007/QUIZ/main/SsMART%20qUIZMART%20s_20250319_103933_0000.png" 
+         alt="Quiz Logo" class="logo">
+
+    <!-- Start Button -->
+    <button class="button" onclick="showClassSelection()">Start</button>
+
+    <!-- Class Selection (Initially Hidden) -->
+    <div id="classSelection" class="hidden">
+        <h2>Select Your Class</h2>
+        <select id="classSelect">
+            <option value="class10">Class 10</option>
+            <option value="class12">Class 12</option>
+            <option value="jee">JEE</option>
+            <option value="neet">NEET</option>
+        </select>
+        <button class="button" onclick="goToLogin()">Proceed</button>
+    </div>
+
+    <!-- Login Form (Initially Hidden) -->
+    <div id="loginForm" class="hidden">
+        <h2>Login</h2>
+        <input type="text" id="loginName" placeholder="Enter your name">
+        <input type="password" id="loginPassword" placeholder="Enter your password">
+        <button class="button" onclick="loginUser()">Login</button>
+        <p>New user? <a href="#" onclick="showRegister()">Create Profile</a></p>
+    </div>
+
+    <!-- Create Profile Form (Initially Hidden) -->
+    <div id="registerForm" class="hidden">
+        <h2>Create Your Profile</h2>
+        <input type="text" id="regName" placeholder="Enter your name">
+        <input type="password" id="regPassword" placeholder="Create a password">
+        <button class="button" onclick="registerUser()">Save Profile</button>
+    </div>
+
+    <!-- Dashboard (Initially Hidden) -->
+    <div id="dashboard" class="hidden">
+        <h1>Welcome, <span id="userName"></span>!</h1>
+        <h2>(This section is blank for future updates)</h2>
+        <button class="button" onclick="logoutUser()">Logout</button>
+    </div>
+
+    <script>
+        function showClassSelection() {
+            document.getElementById("classSelection").classList.remove("hidden");
+        }
+
+        function goToLogin() {
+            document.getElementById("classSelection").classList.add("hidden");
+            document.getElementById("loginForm").classList.remove("hidden");
+        }
+
+        function loginUser() {
+            var name = document.getElementById("loginName").value;
+            var password = document.getElementById("loginPassword").value;
+            var savedName = localStorage.getItem("userName");
+            var savedPassword = localStorage.getItem("userPassword");
+
+            if (name === savedName && password === savedPassword) {
+                localStorage.setItem("loggedInUser", name);
+                showDashboard();
+            } else {
+                alert("Invalid name or password. Please try again.");
+            }
+        }
+
+        function showRegister() {
+            document.getElementById("loginForm").classList.add("hidden");
+            document.getElementById("registerForm").classList.remove("hidden");
+        }
+
+        function registerUser() {
+            var name = document.getElementById("regName").value;
+            var password = document.getElementById("regPassword").value;
+            if (name === "" || password === "") {
+                alert("Please enter your name and password.");
+            } else {
+                localStorage.setItem("userName", name);
+                localStorage.setItem("userPassword", password);
+                alert("Profile created successfully! Please log in.");
+                document.getElementById("registerForm").classList.add("hidden");
+                document.getElementById("loginForm").classList.remove("hidden");
+            }
+        }
+
+        function showDashboard() {
+            document.getElementById("loginForm").classList.add("hidden");
+            document.getElementById("dashboard").classList.remove("hidden");
+            document.getElementById("userName").innerText = localStorage.getItem("loggedInUser");
+        }
+
+        function logoutUser() {
+            localStorage.removeItem("loggedInUser");
+            document.getElementById("dashboard").classList.add("hidden");
+            document.getElementById("loginForm").classList.remove("hidden");
+        }
+
+        window.onload = function() {
+            var name = localStorage.getItem("loggedInUser");
+            if (name) {
+                showDashboard();
+            }
+        };
+    </script>
+
+</body>
+</html>
