@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Quiz Hub</title>
+
+    <style>
+        /* Global Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background: #0c0c0c;
+            color: white;
+        }
+
+        /* Logo */
+        .logo {
+            margin-top: 50px;
+            width: 200px;
+            height: auto;
+        }
+
+        /* Start Button */
+        .start-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .start-btn:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Logo -->
+    <img src="https://github.com/Parmeshwar102007/QUIZ/blob/main/SsMART%20qUIZMART%20s_20250319_100348_0000.png" alt="Quiz Hub Logo" class="logo">
+
+    <!-- Start Button -->
+    <br>
+    <button class="start-btn" onclick="startQuiz()">Start</button>
+
+    <script>
+        function startQuiz() {
+            window.location.href = "index.html"; // Redirects to the main quiz page
+        }
+    </script>
+
+</body>
+</html>
