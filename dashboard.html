@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            text-align: center;
+            background: url('https://raw.githubusercontent.com/Parmeshwar102007/QUIZ/main/IIT_Delhi_administrative_building.jpg') no-repeat center center/cover;
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            width: 80%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: black;
+        }
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            background: white;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            width: 200px;
+            text-align: left;
+        }
+        .dropdown a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: black;
+            font-size: 16px;
+        }
+        .dropdown a:hover {
+            background: #f1f1f1;
+        }
+        .menu-options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .menu-options button {
+            width: 250px;
+            padding: 15px;
+            font-size: 20px;
+            margin: 10px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: black;
+            font-weight: bold;
+        }
+        .menu-options button:hover {
+            text-decoration: underline;
+        }
+        .content {
+            display: none;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Three-dot Menu -->
+    <div class="menu" onclick="toggleMenu()">⋮</div>
+    <div class="dropdown" id="dropdownMenu">
+        <a href="index.html">Homepage</a>
+        <a href="#" onclick="showContent('feedbackSection')">Feedback</a>
+        <a href="#" onclick="showContent('contactSection')">Contact</a>
+        <a href="#">Other Useful Links</a>
+    </div>
+
+    <div class="container">
+        <h1>Welcome to Your Dashboard</h1>
+        <div class="menu-options">
+            <button onclick="showContent('startStudy')">Start Study</button>
+            <button onclick="goToNCERTBooks()">NCERT Books</button>
+            <button onclick="showContent('quizSection')">Quiz</button>
+            <button onclick="showContent('communitySection')">Community Section</button>
+        </div>
+    </div>
+
+    <!-- Feedback Section -->
+    <div id="feedbackSection" class="content container">
+        <h2>Feedback</h2>
+        <textarea placeholder="Write your feedback here..."></textarea>
+    </div>
+
+    <!-- Contact Section -->
+    <div id="contactSection" class="content container">
+        <h2>Contact</h2>
+        <p>Please contact Parmeshwar for any help and support.</p>
+    </div>
+
+    <!-- Start Study Content -->
+    <div id="startStudy" class="content container">
+        <h2>Start Study</h2>
+        <p>Study materials and resources will be available here.</p>
+    </div>
+
+    <!-- Quiz Section Content -->
+    <div id="quizSection" class="content container">
+        <h2>Quiz Section</h2>
+        <p>The interactive quiz will be implemented soon. Stay tuned!</p>
+    </div>
+
+    <!-- Community Section -->
+    <div id="communitySection" class="content container">
+        <h2>Community Doubt Solver</h2>
+        <textarea id="doubtInput" placeholder="Ask your doubt..."></textarea>
+        <button onclick="postDoubt()">Post Doubt</button>
+        <div id="doubtList"></div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            let menu = document.getElementById("dropdownMenu");
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
+        }
+
+        function showContent(sectionId) {
+            var sections = document.querySelectorAll('.content');
+            sections.forEach(section => section.style.display = "none");
+
+            document.getElementById(sectionId).style.display = "block";
+        }
+
+        function goToNCERTBooks() {
+            window.location.href = "https://ncert.nic.in/textbook.php";
+        }
+
+        function postDoubt() {
+            let doubtText = document.getElementById("doubtInput").value;
+            if (doubtText.trim() === "") {
+                alert("Please enter a doubt.");
+                return;
+            }
+
+            let doubtList = document.getElementById("doubtList");
+            let doubtDiv = document.createElement("div");
+            doubtDiv.classList.add("doubt");
+            doubtDiv.innerHTML = `<p><strong>Doubt:</strong> ${doubtText}</p>
+                                  <textarea class="replyInput" placeholder="Reply to this doubt..."></textarea>
+                                  <button onclick="postReply(this)">Reply</button>
+                                  <div class="replyList"></div>`;
+
+            doubtList.prepend(doubtDiv);
+            document.getElementById("doubtInput").value = "";
+        }
+
+        function postReply(button) {
+            let replyText = button.previousElementSibling.value;
+            if (replyText.trim() === "") {
+                alert("Please enter a reply.");
+                return;
+            }
+
+            let replyList = button.nextElementSibling;
+            let replyDiv = document.createElement("div");
+            replyDiv.innerHTML = `<p>${replyText}</p>`;
+            
+            replyList.appendChild(replyDiv);
+            button.previousElementSibling.value = "";
+        }
+    </script>
+
+</body>
+</html>
