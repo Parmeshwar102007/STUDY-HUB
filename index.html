@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community - Doubt Solving</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            width: 80%;
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        textarea, input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .doubt-list {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .doubt {
+            background: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .reply {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #555;
+            border-left: 3px solid #007BFF;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Community Doubt Solver</h2>
+        <textarea id="doubtInput" placeholder="Ask your doubt..."></textarea>
+        <button class="button" onclick="postDoubt()">Post Doubt</button>
+
+        <div id="doubtList" class="doubt-list"></div>
+    </div>
+
+    <script>
+        function postDoubt() {
+            let doubtText = document.getElementById("doubtInput").value;
+            if (doubtText.trim() === "") {
+                alert("Please enter a doubt.");
+                return;
+            }
+
+            let doubtList = document.getElementById("doubtList");
+            let doubtDiv = document.createElement("div");
+            doubtDiv.classList.add("doubt");
+            doubtDiv.innerHTML = `<p><strong>Doubt:</strong> ${doubtText}</p>
+                                  <textarea class="replyInput" placeholder="Reply to this doubt..."></textarea>
+                                  <button class="button replyButton" onclick="postReply(this)">Reply</button>
+                                  <div class="replyList"></div>`;
+
+            doubtList.prepend(doubtDiv);
+            document.getElementById("doubtInput").value = "";
+            saveDoubts();
+        }
+
+        function postReply(button) {
+            let replyText = button.previousElementSibling.value;
+            if (replyText.trim() === "") {
+                alert("Please enter a reply.");
+                return;
+            }
+
+            let replyList = button.nextElementSibling;
+            let replyDiv = document.createElement("div");
+            replyDiv.classList.add("reply");
+            replyDiv.innerHTML = `<p>${replyText}</p>`;
+            
+            replyList.appendChild(replyDiv);
+            button.previousElementSibling.value = "";
+            saveDoubts();
+        }
+
+        function saveDoubts() {
+            localStorage.setItem("doubts", document.getElementById("doubtList").innerHTML);
+        }
+
+        function loadDoubts() {
+            let savedDoubts = localStorage.getItem("doubts");
+            if (savedDoubts) {
+                document.getElementById("doubtList").innerHTML = savedDoubts;
+            }
+        }
+
+        window.onload = loadDoubts;
+    </script>
+
+</body>
+</html>
