@@ -129,38 +129,102 @@
         <button onclick="closeContent('contactSection')">Close</button>
     </div>
 
-    <!-- Restored Calculator -->
-    <div id="calculator" class="calculator" style="display: none;">
-        <h2>Advanced Calculator</h2>
-        <input type="text" id="calcDisplay" readonly style="width: 95%; font-size: 22px; padding: 10px; text-align: right;">
-        <br>
-        <div class="calc-buttons">
-            <button onclick="clearCalc()">C</button>
-            <button onclick="appendCalc('/')">÷</button>
-            <button onclick="appendCalc('*')">×</button>
-            <button onclick="backspaceCalc()">⌫</button>
+    <!-- <!-- Restored Blue-Themed Calculator -->
+<div id="calculator" class="calculator" style="display: none;">
+    <h2>Advanced Calculator</h2>
+    <input type="text" id="calcDisplay" readonly style="width: 95%; font-size: 22px; padding: 10px; text-align: right;">
+    <br>
+    <div class="calc-buttons">
+        <button onclick="clearCalc()">C</button>
+        <button onclick="appendCalc('/')">÷</button>
+        <button onclick="appendCalc('*')">×</button>
+        <button onclick="backspaceCalc()">⌫</button>
 
-            <button onclick="appendCalc('7')">7</button>
-            <button onclick="appendCalc('8')">8</button>
-            <button onclick="appendCalc('9')">9</button>
-            <button onclick="appendCalc('-')">−</button>
+        <button onclick="appendCalc('7')">7</button>
+        <button onclick="appendCalc('8')">8</button>
+        <button onclick="appendCalc('9')">9</button>
+        <button onclick="appendCalc('-')">−</button>
 
-            <button onclick="appendCalc('4')">4</button>
-            <button onclick="appendCalc('5')">5</button>
-            <button onclick="appendCalc('6')">6</button>
-            <button onclick="appendCalc('+')">+</button>
+        <button onclick="appendCalc('4')">4</button>
+        <button onclick="appendCalc('5')">5</button>
+        <button onclick="appendCalc('6')">6</button>
+        <button onclick="appendCalc('+')">+</button>
 
-            <button onclick="appendCalc('1')">1</button>
-            <button onclick="appendCalc('2')">2</button>
-            <button onclick="appendCalc('3')">3</button>
-            <button onclick="calculate()">=</button>
+        <button onclick="appendCalc('1')">1</button>
+        <button onclick="appendCalc('2')">2</button>
+        <button onclick="appendCalc('3')">3</button>
+        <button onclick="calculate()">=</button>
 
-            <button onclick="appendCalc('0')" style="width: 50%;">0</button>
-            <button onclick="appendCalc('.')">.</button>
-        </div>
+        <button onclick="appendCalc('0')" style="width: 50%;">0</button>
+        <button onclick="appendCalc('.')">.</button>
     </div>
+</div>
 
-    <script>
+<style>
+    .calculator {
+        background: #1E88E5;
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        width: 100%;
+        max-width: 350px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        margin-top: 20px;
+    }
+    .calculator h2 {
+        margin-bottom: 10px;
+    }
+    .calc-buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-top: 15px;
+    }
+    .calc-buttons button {
+        font-size: 20px;
+        padding: 15px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        background: #1565C0; /* Restored Blue */
+        color: white;
+        transition: 0.3s;
+    }
+    .calc-buttons button:hover {
+        background: #0D47A1; /* Darker Blue on Hover */
+    }
+</style>
+
+<script>
+    function appendCalc(value) {
+        document.getElementById("calcDisplay").value += value;
+    }
+
+    function calculate() {
+        try {
+            document.getElementById("calcDisplay").value = eval(document.getElementById("calcDisplay").value);
+        } catch {
+            document.getElementById("calcDisplay").value = "Error!";
+        }
+    }
+
+    function clearCalc() {
+        document.getElementById("calcDisplay").value = "";
+    }
+
+    function backspaceCalc() {
+        let input = document.getElementById("calcDisplay").value;
+        document.getElementById("calcDisplay").value = input.slice(0, -1);
+    }
+
+    function toggleCalculator() {
+        let calculator = document.getElementById("calculator");
+        calculator.style.display = (calculator.style.display === "block") ? "none" : "block";
+    }
+</script>Restored Calculator -->
+    
+           
         function toggleMenu() {
             let menu = document.getElementById("dropdownMenu");
             menu.style.display = (menu.style.display === "block") ? "none" : "block";
