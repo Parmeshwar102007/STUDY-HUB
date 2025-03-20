@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <style>
+        body { 
+            text-align: center; font-family: Arial, sans-serif; 
+            background: linear-gradient(to right, #4facfe, #00f2fe); 
+            color: white; 
+        }
+        h2 { margin-top: 20px; font-size: 28px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); }
+        .board { 
+            display: grid; grid-template-columns: repeat(3, 100px); 
+            grid-template-rows: repeat(3, 100px); margin: 20px auto; 
+            background: rgba(255, 255, 255, 0.1); padding: 10px; 
+            border-radius: 10px; 
+        }
+        .cell {
+            width: 100px; height: 100px; font-size: 2em; text-align: center;
+            border: 2px solid white; cursor: pointer; background-color: rgba(255, 255, 255, 0.2);
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s;
+        }
+        .cell:hover { background-color: rgba(255, 255, 255, 0.3); }
+        .cell.taken { cursor: not-allowed; }
+        .cell.x { color: #3498db; font-weight: bold; } /* X is Blue */
+        .cell.o { color: #e74c3c; font-weight: bold; } /* O is Red */
+        .controls { margin-top: 20px; }
+        .button {
+            padding: 10px 20px; font-size: 18px; margin: 5px;
+            background: #2ecc71; color: white; border: none; cursor: pointer;
+            border-radius: 5px; transition: 0.3s;
+        }
+        .button:hover { background: #27ae60; }
+    </style>
+</head>
+<body>
+
+    <h2>Tic-Tac-Toe</h2>
+    <div class="board" id="board"></div>
+    <div class="controls">
+        <button class="button" onclick="resetGame()">Restart</button>
+        <button class="button" onclick="undoMove()">Undo Move</button>
+    </div>
+
+    <script>
+        let board = ["", "", "", "", "", "", "", "", ""];
+        let player = "X";
+        let ai = "O";
+        let gameOver = false;
+        let moveHistory = [];
+
+        function createBoard() {
+            let boardDiv = document.getElementById("board");
+            boardDiv.innerHTML = "";
+            board.forEach((cell, index) => {
+                let div = document.createElement("div");
+                div.classList.add("cell");
+                if (cell === "X") div.classList.add("x");
+                if (cell === "O") div.classList.add("o");
+                div.textContent = cell;
+                div.addEventListener("click", () => playerMove(index));
+                boardDiv.appendChild(div);
+            });
+        }
+
+        function playerMove(index) {
+            if (board[index] === "" && !gameOver) {
+                board[index] = player;
+                moveHistory.push([...board]); // Save move for undo
+                createBoard();
+                checkWinner();
+                if (!gameOver) setTimeout(aiMove, 500);
+            }
+        }
+
+        function aiMove() {
+            let bestMove = getBestMove();
+            if (bestMove !== -1) {
+                board[bestMove] = ai;
+                moveHistory.push([...board]); // Save move for undo
+                createBoard();
+                checkWinner();
+            }
+        }
+
+        function getBestMove() {
+            // Check if AI can win
+            for (let i = 0; i < 9; i++) {
+                if (board[i] === "") {
+                    board[i] = ai;
+                    if (checkWin(ai)) {
+                        board[i] = "";
+                        return i;
+                    }
+                    board[i] = "";
+                }
+            }
+
+            // Block player's winning move
+            for (let i = 0; i < 9; i++) {
+                if (board[i] === "") {
+                    board[i] = player;
+                    if (checkWin(player)) {
+                        board[i] = "";
+                        return i;
+                    }
+                    board[i] = "";
+                }
+            }
+
+            // Take center if available
+            if (board[4] === "") return 4;
+
+            // Take a corner if available
+            let corners = [0, 2, 6, 8].filter(i => board[i] === "");
+            if (corners.length > 0) return corners[Math.floor(Math.random() * corners.length)];
+
+            // Take a random move
+            let availableMoves = board.map((val, idx) => val === "" ? idx : -1).filter(i => i !== -1);
+            return availableMoves.length > 0 ? availableMoves[Math.floor(Math.random() * availableMoves.length)] : -1;
+        }
+
+        function checkWinner() {
+            if (checkWin(player)) {
+                gameOver = true;
+                setTimeout(() => alert("You Win! 🎉"), 300);
+            } else if (checkWin(ai)) {
+                gameOver = true;
+                setTimeout(() => alert("AI Wins! 🤖"), 300);
+            } else if (!board.includes("")) {
+                gameOver = true;
+                setTimeout(() => alert("It's a Draw! 🤝"), 300);
+            }
+        }
+
+        function checkWin(symbol) {
+            let winPatterns = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+                [0, 4, 8], [2, 4, 6]             // Diagonals
+            ];
+            return winPatterns.some(pattern => pattern.every(index => board[index] === symbol));
+        }
+
+        function resetGame() {
+            board = ["", "", "", "", "", "", "", "", ""];
+            gameOver = false;
+            moveHistory = [];
+            createBoard();
+        }
+
+        function undoMove() {
+            if (moveHistory.length > 1) {
+                moveHistory.pop();
+                board = moveHistory[moveHistory.length - 1];
+                gameOver = false;
+                createBoard();
+            }
+        }
+
+        createBoard();
+    </script>
+
+</body>
+</html>
