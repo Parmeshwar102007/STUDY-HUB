@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEET Biology Quiz 2</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #1E88E5, #1565C0);
+            color: white;
+            padding: 20px;
+        }
+        .question-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .option {
+            display: block;
+            padding: 10px;
+            margin: 5px auto;
+            background: white;
+            color: black;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            width: 80%;
+        }
+        .option:hover { background: lightgray; }
+        .correct { background-color: green !important; color: white; }
+        .wrong { background-color: red !important; color: white; }
+        .selected { pointer-events: none; } /* Disable after selection */
+    </style>
+</head>
+<body>
+
+    <h1>NEET Biology Quiz 2</h1>
+    <p>+4 for Correct Answer, -1 for Wrong Answer</p>
+    <div id="quiz-container"></div>
+    <button onclick="submitQuiz()">Submit</button>
+    <h2 id="result"></h2>
+    <h3 id="message"></h3>
+
+    <script>
+        const quizData = [
+            { question: "Which part of the human brain is responsible for speech production?", options: ["Cerebellum", "Medulla oblongata", "Broca’s area", "Hypothalamus"], answer: "Broca’s area" },
+            { question: "Which of the following is the largest gland in the human body?", options: ["Thyroid", "Pancreas", "Liver", "Pituitary"], answer: "Liver" },
+            { question: "Which type of RNA carries amino acids to the ribosome?", options: ["mRNA", "rRNA", "tRNA", "snRNA"], answer: "tRNA" },
+            { question: "Which enzyme is responsible for unwinding DNA during replication?", options: ["DNA ligase", "Topoisomerase", "DNA polymerase", "Helicase"], answer: "Helicase" },
+            { question: "Which of the following is an example of a vestigial organ in humans?", options: ["Liver", "Appendix", "Lungs", "Heart"], answer: "Appendix" },
+            { question: "What is the end product of glycolysis?", options: ["Acetyl CoA", "Pyruvate", "Lactic acid", "ATP"], answer: "Pyruvate" },
+            { question: "The hormone responsible for milk ejection during breastfeeding is:", options: ["Prolactin", "Oxytocin", "Estrogen", "Progesterone"], answer: "Oxytocin" },
+            { question: "Which vitamin is essential for blood clotting?", options: ["Vitamin A", "Vitamin K", "Vitamin C", "Vitamin D"], answer: "Vitamin K" },
+            { question: "Which of the following is an autoimmune disorder?", options: ["Diabetes mellitus", "Hypertension", "Asthma", "Rheumatoid arthritis"], answer: "Rheumatoid arthritis" },
+            { question: "Which part of the nephron is responsible for reabsorbing glucose?", options: ["Loop of Henle", "Distal convoluted tubule", "Proximal convoluted tubule", "Collecting duct"], answer: "Proximal convoluted tubule" },
+            { question: "Which type of immunity is passed from mother to child through breast milk?", options: ["Active immunity", "Passive immunity", "Innate immunity", "Adaptive immunity"], answer: "Passive immunity" },
+            { question: "What is the function of the SA node in the heart?", options: ["Regulates blood pressure", "Controls heart rate", "Stores oxygen", "Breaks down cholesterol"], answer: "Controls heart rate" },
+            { question: "Which blood cells are responsible for antibody production?", options: ["T-cells", "B-cells", "Neutrophils", "Macrophages"], answer: "B-cells" },
+            { question: "The process by which plants lose water vapor from aerial parts is called:", options: ["Photosynthesis", "Respiration", "Transpiration", "Guttation"], answer: "Transpiration" },
+            { question: "Which plant hormone promotes seed dormancy?", options: ["Gibberellin", "Abscisic acid", "Auxin", "Cytokinin"], answer: "Abscisic acid" },
+            { question: "Which type of connective tissue stores fat?", options: ["Cartilage", "Bone", "Adipose tissue", "Ligament"], answer: "Adipose tissue" },
+            { question: "Which bacteria convert atmospheric nitrogen into ammonia?", options: ["Rhizobium", "E. coli", "Salmonella", "Mycobacterium"], answer: "Rhizobium" },
+            { question: "Which organelle is responsible for detoxification of drugs in liver cells?", options: ["Golgi apparatus", "Lysosome", "Smooth endoplasmic reticulum", "Rough endoplasmic reticulum"], answer: "Smooth endoplasmic reticulum" },
+            { question: "Which pigment is responsible for red color in RBCs?", options: ["Myoglobin", "Hemoglobin", "Chlorophyll", "Keratin"], answer: "Hemoglobin" },
+            { question: "Which hormone regulates the circadian rhythm in humans?", options: ["Melatonin", "Cortisol", "Insulin", "Thyroxine"], answer: "Melatonin" }
+        ];
+
+        function loadQuiz() {
+            let quizContainer = document.getElementById("quiz-container");
+            quizContainer.innerHTML = "";
+            quizData.forEach((q, index) => {
+                let questionDiv = document.createElement("div");
+                questionDiv.className = "question-container";
+                questionDiv.innerHTML = `<h3>${index + 1}. ${q.question}</h3>`;
+                q.options.forEach(option => {
+                    let optionBtn = document.createElement("button");
+                    optionBtn.className = "option";
+                    optionBtn.innerText = option;
+                    optionBtn.onclick = function () {
+                        checkAnswer(optionBtn, option, q.answer, index);
+                    };
+                    optionBtn.dataset.questionIndex = index;
+                    questionDiv.appendChild(optionBtn);
+                });
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        function checkAnswer(button, selected, correct, questionIndex) {
+            let buttons = document.querySelectorAll(`.option[data-question-index='${questionIndex}']`);
+            buttons.forEach(btn => btn.classList.add("selected")); // Disable after selection
+            if (selected === correct) {
+                button.classList.add("correct");
+            } else {
+                button.classList.add("wrong");
+            }
+        }
+
+        function submitQuiz() {
+            let correctCount = document.querySelectorAll(".correct").length;
+            let wrongCount = document.querySelectorAll(".wrong").length;
+            let score = (correctCount * 4) - wrongCount;
+            document.getElementById("result").innerText = "Your Score: " + score;
+            document.getElementById("message").innerText = "PARMESHWAR :- ALL THE BEST BRO...";
+        }
+
+        loadQuiz();
+    </script>
+
+</body>
+</html>
