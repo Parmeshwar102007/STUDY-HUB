@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEET Biology & Chemistry Quiz 4</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #1E88E5, #1565C0);
+            color: white;
+            padding: 20px;
+        }
+        .question-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .option {
+            display: block;
+            padding: 10px;
+            margin: 5px auto;
+            background: white;
+            color: black;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            width: 80%;
+        }
+        .option:hover { background: lightgray; }
+        .correct { background-color: green !important; color: white; }
+        .wrong { background-color: red !important; color: white; }
+        .selected { pointer-events: none; } /* Disable after selection */
+    </style>
+</head>
+<body>
+
+    <h1>NEET Biology & Chemistry Quiz 4</h1>
+    <p>+4 for Correct Answer, -1 for Wrong Answer</p>
+    <div id="quiz-container"></div>
+    <button onclick="submitQuiz()">Submit</button>
+    <h2 id="result"></h2>
+    <h3 id="message"></h3>
+
+    <script>
+        const quizData = [
+            // Biology Questions
+            { question: "Which is the largest cell in the human body?", options: ["Liver cell", "Neuron", "Ovum", "Muscle cell"], answer: "Ovum" },
+            { question: "Which hormone is secreted by the pineal gland?", options: ["Melatonin", "Insulin", "Thyroxine", "Adrenaline"], answer: "Melatonin" },
+            { question: "The genetic disorder sickle cell anemia is due to:", options: ["Point mutation", "Frameshift mutation", "Chromosomal deletion", "Translocation"], answer: "Point mutation" },
+            { question: "Which enzyme is responsible for DNA replication?", options: ["RNA polymerase", "DNA helicase", "Ligase", "Telomerase"], answer: "DNA helicase" },
+            { question: "Which part of the nephron is responsible for filtration?", options: ["Loop of Henle", "Collecting duct", "Glomerulus", "Proximal tubule"], answer: "Glomerulus" },
+            { question: "Which of the following is the smallest bone in the human body?", options: ["Femur", "Stapes", "Tibia", "Humerus"], answer: "Stapes" },
+            { question: "Which vitamin helps in the clotting of blood?", options: ["Vitamin A", "Vitamin K", "Vitamin C", "Vitamin B12"], answer: "Vitamin K" },
+            { question: "Which hormone is responsible for regulating calcium levels in blood?", options: ["Thyroxine", "Cortisol", "Parathyroid hormone", "Insulin"], answer: "Parathyroid hormone" },
+            { question: "Which of the following is not a type of connective tissue?", options: ["Bone", "Cartilage", "Blood", "Neuron"], answer: "Neuron" },
+            { question: "Which of the following is responsible for transport of oxygen in blood?", options: ["Hemoglobin", "Myoglobin", "Collagen", "Keratin"], answer: "Hemoglobin" },
+
+            // Chemistry Questions
+            { question: "Which gas is known as the ‘Laughing Gas’?", options: ["O₂", "CO₂", "N₂O", "NO₂"], answer: "N₂O" },
+            { question: "Which of the following has the highest bond energy?", options: ["O₂", "N₂", "H₂", "F₂"], answer: "N₂" },
+            { question: "Which acid is found in lemon?", options: ["Acetic acid", "Citric acid", "Lactic acid", "Tartaric acid"], answer: "Citric acid" },
+            { question: "Which element is the most electronegative?", options: ["Oxygen", "Fluorine", "Chlorine", "Bromine"], answer: "Fluorine" },
+            { question: "The shape of methane (CH₄) is:", options: ["Linear", "Tetrahedral", "Trigonal planar", "Bent"], answer: "Tetrahedral" },
+            { question: "Which type of hybridization is found in ethene (C₂H₄)?", options: ["sp", "sp²", "sp³", "dsp²"], answer: "sp²" },
+            { question: "Which of the following is an amphoteric oxide?", options: ["Na₂O", "Al₂O₃", "CO₂", "MgO"], answer: "Al₂O₃" },
+            { question: "Which law states that ‘At constant pressure, the volume of a gas is directly proportional to its temperature’?", options: ["Boyle’s Law", "Charles’ Law", "Avogadro’s Law", "Dalton’s Law"], answer: "Charles’ Law" },
+            { question: "What is the common name of CaO?", options: ["Slaked lime", "Limestone", "Quicklime", "Bleaching powder"], answer: "Quicklime" },
+            { question: "Which of the following is a primary alcohol?", options: ["Propan-2-ol", "Methanol", "Benzyl alcohol", "Isopropanol"], answer: "Methanol" }
+        ];
+
+        function loadQuiz() {
+            let quizContainer = document.getElementById("quiz-container");
+            quizContainer.innerHTML = "";
+            quizData.forEach((q, index) => {
+                let questionDiv = document.createElement("div");
+                questionDiv.className = "question-container";
+                questionDiv.innerHTML = `<h3>${index + 1}. ${q.question}</h3>`;
+                q.options.forEach(option => {
+                    let optionBtn = document.createElement("button");
+                    optionBtn.className = "option";
+                    optionBtn.innerText = option;
+                    optionBtn.onclick = function () {
+                        checkAnswer(optionBtn, option, q.answer, index);
+                    };
+                    optionBtn.dataset.questionIndex = index;
+                    questionDiv.appendChild(optionBtn);
+                });
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        function checkAnswer(button, selected, correct, questionIndex) {
+            let buttons = document.querySelectorAll(`.option[data-question-index='${questionIndex}']`);
+            buttons.forEach(btn => btn.classList.add("selected")); // Disable after selection
+            if (selected === correct) {
+                button.classList.add("correct");
+            } else {
+                button.classList.add("wrong");
+            }
+        }
+
+        function submitQuiz() {
+            let correctCount = document.querySelectorAll(".correct").length;
+            let wrongCount = document.querySelectorAll(".wrong").length;
+            let score = (correctCount * 4) - wrongCount;
+            document.getElementById("result").innerText = "Your Score: " + score;
+            document.getElementById("message").innerText = "PARMESHWAR :- ALL THE BEST BRO...";
+        }
+
+        loadQuiz();
+    </script>
+
+</body>
+</html>
