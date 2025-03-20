@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE Quiz 4</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #1E88E5, #1565C0);
+            color: white;
+            padding: 20px;
+        }
+        .question-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .option {
+            display: block;
+            padding: 10px;
+            margin: 5px auto;
+            background: white;
+            color: black;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            width: 80%;
+        }
+        .option:hover { background: lightgray; }
+        .correct { background-color: green !important; color: white; }
+        .wrong { background-color: red !important; color: white; }
+        .selected { pointer-events: none; } /* Disable after selection */
+    </style>
+</head>
+<body>
+
+    <h1>JEE Mains Quiz 4</h1>
+    <p>+4 for Correct Answer, -1 for Wrong Answer</p>
+    <div id="quiz-container"></div>
+    <button onclick="submitQuiz()">Submit</button>
+    <h2 id="result"></h2>
+    <h3 id="message"></h3>
+
+    <script>
+        const quizData = [
+            { question: "A uniform rod of length L and mass M is hinged at one end. What is its moment of inertia about the hinge?", options: ["ML²/3", "ML²/12", "ML²/4", "ML²/6"], answer: "ML²/3" },
+            { question: "A body is thrown vertically upward with speed u. The maximum height attained is:", options: ["u²/2g", "u²/g", "2u²/g", "u²/4g"], answer: "u²/2g" },
+            { question: "A charged particle moves in a uniform magnetic field in a circular path. Its time period depends on:", options: ["Charge only", "Mass only", "Magnetic field only", "Both mass and charge"], answer: "Both mass and charge" },
+            { question: "Which of the following is NOT a conservative force?", options: ["Gravitational force", "Electrostatic force", "Magnetic force", "Spring force"], answer: "Magnetic force" },
+            { question: "A Carnot engine operates between temperatures 800K and 400K. The efficiency is:", options: ["25%", "50%", "75%", "100%"], answer: "50%" },
+            { question: "The kinetic energy of a rotating body is given by:", options: ["(1/2) Iω²", "(1/2) mv²", "Iω", "mvω"], answer: "(1/2) Iω²" },
+            { question: "In Young's double slit experiment, if the separation between slits is doubled, fringe width:", options: ["Doubles", "Halves", "Remains same", "Becomes zero"], answer: "Halves" },
+            { question: "A particle executes SHM with amplitude A. At what displacement is its kinetic energy equal to potential energy?", options: ["A/√2", "A/2", "A/3", "A√2"], answer: "A/√2" },
+            { question: "A gas expands isothermally. The work done is given by:", options: ["nRT ln(Vf/Vi)", "PV", "nCvΔT", "nCpΔT"], answer: "nRT ln(Vf/Vi)" },
+            { question: "A prism of refractive index 1.5 has an angle of 60°. What is the minimum deviation?", options: ["30°", "45°", "60°", "90°"], answer: "30°" },
+            { question: "The escape velocity of a planet depends on:", options: ["Mass only", "Radius only", "Both mass and radius", "Neither mass nor radius"], answer: "Both mass and radius" },
+            { question: "A projectile is fired at an angle of 45° for maximum range. The ratio of max height to range is:", options: ["1:2", "1:3", "1:4", "1:5"], answer: "1:4" },
+            { question: "A thin lens behaves as a convex lens in air but a concave lens in water. This is because:", options: ["Density of water is less", "Refractive index of lens is less than water", "Refractive index of lens is more than water", "Total internal reflection"], answer: "Refractive index of lens is less than water" },
+            { question: "If the speed of a wave is doubled, its wavelength:", options: ["Doubles", "Halves", "Remains same", "Becomes zero"], answer: "Doubles" },
+            { question: "The frequency of fundamental mode in a closed pipe is f. The frequency of the first overtone is:", options: ["2f", "3f", "4f", "5f"], answer: "3f" },
+            { question: "A solenoid carries a current I. If the number of turns is doubled keeping length the same, magnetic field inside:", options: ["Doubles", "Halves", "Remains same", "Becomes zero"], answer: "Doubles" },
+            { question: "A light ray enters a glass slab at 30° and exits at the same angle. This illustrates:", options: ["Refraction", "Total internal reflection", "Deviation", "Dispersion"], answer: "Refraction" },
+            { question: "An electron is moving perpendicular to a uniform magnetic field. What happens to its speed?", options: ["Increases", "Decreases", "Remains constant", "Becomes zero"], answer: "Remains constant" },
+            { question: "A pendulum clock gains time when taken to:", options: ["Higher altitude", "Lower altitude", "A denser medium", "A hotter environment"], answer: "Lower altitude" },
+            { question: "If a wave has amplitude A, its intensity is proportional to:", options: ["A", "A²", "A³", "A⁴"], answer: "A²" }
+        ];
+
+        function loadQuiz() {
+            let quizContainer = document.getElementById("quiz-container");
+            quizContainer.innerHTML = "";
+            quizData.forEach((q, index) => {
+                let questionDiv = document.createElement("div");
+                questionDiv.className = "question-container";
+                questionDiv.innerHTML = `<h3>${index + 1}. ${q.question}</h3>`;
+                q.options.forEach(option => {
+                    let optionBtn = document.createElement("button");
+                    optionBtn.className = "option";
+                    optionBtn.innerText = option;
+                    optionBtn.onclick = function () {
+                        checkAnswer(optionBtn, option, q.answer, index);
+                    };
+                    optionBtn.dataset.questionIndex = index;
+                    questionDiv.appendChild(optionBtn);
+                });
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        function checkAnswer(button, selected, correct, questionIndex) {
+            let buttons = document.querySelectorAll(`.option[data-question-index='${questionIndex}']`);
+            buttons.forEach(btn => btn.classList.add("selected")); // Disable after selection
+            if (selected === correct) {
+                button.classList.add("correct");
+            } else {
+                button.classList.add("wrong");
+            }
+        }
+
+        function submitQuiz() {
+            let correctCount = document.querySelectorAll(".correct").length;
+            let wrongCount = document.querySelectorAll(".wrong").length;
+            let score = (correctCount * 4) - wrongCount;
+            document.getElementById("result").innerText = "Your Score: " + score;
+            document.getElementById("message").innerText = "PARMESHWAR :- ALL THE BEST BRO...";
+        }
+
+        loadQuiz();
+    </script>
+
+</body>
+</html>
