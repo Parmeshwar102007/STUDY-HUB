@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEET Biology Quiz 1</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #1E88E5, #1565C0);
+            color: white;
+            padding: 20px;
+        }
+        .question-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .option {
+            display: block;
+            padding: 10px;
+            margin: 5px auto;
+            background: white;
+            color: black;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            width: 80%;
+        }
+        .option:hover { background: lightgray; }
+        .correct { background-color: green !important; color: white; }
+        .wrong { background-color: red !important; color: white; }
+        .selected { pointer-events: none; } /* Disable after selection */
+    </style>
+</head>
+<body>
+
+    <h1>NEET Biology Quiz 1</h1>
+    <p>+4 for Correct Answer, -1 for Wrong Answer</p>
+    <div id="quiz-container"></div>
+    <button onclick="submitQuiz()">Submit</button>
+    <h2 id="result"></h2>
+    <h3 id="message"></h3>
+
+    <script>
+        const quizData = [
+            { question: "Which of the following is not a characteristic of all living organisms?", options: ["Growth", "Reproduction", "Photosynthesis", "Metabolism"], answer: "Photosynthesis" },
+            { question: "Which part of the human brain controls balance and posture?", options: ["Cerebrum", "Medulla", "Cerebellum", "Hypothalamus"], answer: "Cerebellum" },
+            { question: "The functional unit of the kidney is called?", options: ["Neuron", "Nephron", "Hepatocyte", "Alveolus"], answer: "Nephron" },
+            { question: "Which of the following is an example of a sex-linked disorder?", options: ["Sickle cell anemia", "Hemophilia", "Thalassemia", "Cystic fibrosis"], answer: "Hemophilia" },
+            { question: "Which hormone regulates calcium levels in the blood?", options: ["Insulin", "Thyroxine", "Parathyroid hormone", "Aldosterone"], answer: "Parathyroid hormone" },
+            { question: "Which enzyme is responsible for DNA replication?", options: ["Amylase", "Helicase", "Ligase", "Protease"], answer: "Helicase" },
+            { question: "What is the primary function of ribosomes?", options: ["DNA replication", "Protein synthesis", "Lipid metabolism", "Carbohydrate digestion"], answer: "Protein synthesis" },
+            { question: "Which plant hormone is responsible for fruit ripening?", options: ["Auxin", "Cytokinin", "Gibberellin", "Ethylene"], answer: "Ethylene" },
+            { question: "Which type of immunity is provided by a vaccine?", options: ["Innate immunity", "Active acquired immunity", "Passive immunity", "Cell-mediated immunity"], answer: "Active acquired immunity" },
+            { question: "Which part of the flower develops into a fruit?", options: ["Petal", "Sepal", "Ovary", "Stigma"], answer: "Ovary" },
+            { question: "Which of the following is the longest bone in the human body?", options: ["Humerus", "Femur", "Tibia", "Fibula"], answer: "Femur" },
+            { question: "Which gas is required for photosynthesis?", options: ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"], answer: "Carbon dioxide" },
+            { question: "Which blood group is known as the universal donor?", options: ["A", "B", "O", "AB"], answer: "O" },
+            { question: "Which organ is responsible for detoxifying harmful substances in the body?", options: ["Kidney", "Heart", "Liver", "Lungs"], answer: "Liver" },
+            { question: "The process of conversion of nitrogen gas into ammonia is called?", options: ["Nitrification", "Denitrification", "Nitrogen fixation", "Ammonification"], answer: "Nitrogen fixation" },
+            { question: "Which tissue in plants is responsible for transporting water?", options: ["Phloem", "Xylem", "Parenchyma", "Collenchyma"], answer: "Xylem" },
+            { question: "Which type of muscle is involuntary and found in the walls of internal organs?", options: ["Skeletal muscle", "Cardiac muscle", "Smooth muscle", "Striated muscle"], answer: "Smooth muscle" },
+            { question: "Which vitamin deficiency causes rickets?", options: ["Vitamin A", "Vitamin B12", "Vitamin C", "Vitamin D"], answer: "Vitamin D" },
+            { question: "Which part of the cell is known as the powerhouse?", options: ["Ribosome", "Nucleus", "Mitochondria", "Golgi apparatus"], answer: "Mitochondria" },
+            { question: "Which process is responsible for the movement of water through a semi-permeable membrane?", options: ["Diffusion", "Active transport", "Osmosis", "Facilitated diffusion"], answer: "Osmosis" }
+        ];
+
+        function loadQuiz() {
+            let quizContainer = document.getElementById("quiz-container");
+            quizContainer.innerHTML = "";
+            quizData.forEach((q, index) => {
+                let questionDiv = document.createElement("div");
+                questionDiv.className = "question-container";
+                questionDiv.innerHTML = `<h3>${index + 1}. ${q.question}</h3>`;
+                q.options.forEach(option => {
+                    let optionBtn = document.createElement("button");
+                    optionBtn.className = "option";
+                    optionBtn.innerText = option;
+                    optionBtn.onclick = function () {
+                        checkAnswer(optionBtn, option, q.answer, index);
+                    };
+                    optionBtn.dataset.questionIndex = index;
+                    questionDiv.appendChild(optionBtn);
+                });
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        function checkAnswer(button, selected, correct, questionIndex) {
+            let buttons = document.querySelectorAll(`.option[data-question-index='${questionIndex}']`);
+            buttons.forEach(btn => btn.classList.add("selected")); // Disable after selection
+            if (selected === correct) {
+                button.classList.add("correct");
+            } else {
+                button.classList.add("wrong");
+            }
+        }
+
+        function submitQuiz() {
+            let correctCount = document.querySelectorAll(".correct").length;
+            let wrongCount = document.querySelectorAll(".wrong").length;
+            let score = (correctCount * 4) - wrongCount;
+            document.getElementById("result").innerText = "Your Score: " + score;
+            document.getElementById("message").innerText = "PARMESHWAR :- ALL THE BEST BRO...";
+        }
+
+        loadQuiz();
+    </script>
+
+</body>
+</html>
