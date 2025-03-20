@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class 12 Chemistry Quiz</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #1E88E5, #1565C0);
+            color: white;
+            padding: 20px;
+        }
+        .question-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .option {
+            display: block;
+            padding: 10px;
+            margin: 5px auto;
+            background: white;
+            color: black;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            width: 80%;
+        }
+        .option:hover { background: lightgray; }
+        .correct { background-color: green !important; color: white; }
+        .wrong { background-color: red !important; color: white; }
+        .selected { pointer-events: none; } /* Disable after selection */
+    </style>
+</head>
+<body>
+
+    <h1>Class 12 Chemistry Quiz</h1>
+    <p>+4 for Correct Answer, -1 for Wrong Answer</p>
+    <div id="quiz-container"></div>
+    <button onclick="submitQuiz()">Submit</button>
+    <h2 id="result"></h2>
+    <h3 id="message"></h3>
+
+    <script>
+        const quizData = [
+            { question: "Which of the following has the highest electron affinity?", options: ["Fluorine", "Chlorine", "Bromine", "Iodine"], answer: "Chlorine" },
+            { question: "Which quantum number determines the shape of an orbital?", options: ["Principal quantum number", "Azimuthal quantum number", "Magnetic quantum number", "Spin quantum number"], answer: "Azimuthal quantum number" },
+            { question: "The oxidation state of Cr in K₂Cr₂O₇ is:", options: ["+3", "+6", "+7", "+2"], answer: "+6" },
+            { question: "Which of the following has the highest boiling point?", options: ["Methanol", "Ethanol", "Propanol", "Butanol"], answer: "Butanol" },
+            { question: "The IUPAC name of CH₃-CH(OH)-CH₃ is:", options: ["Ethanol", "Propan-2-ol", "Propan-1-ol", "Methanol"], answer: "Propan-2-ol" },
+            { question: "Which of the following acts as a Lewis base?", options: ["BF₃", "AlCl₃", "NH₃", "FeCl₃"], answer: "NH₃" },
+            { question: "Which of the following is the weakest acid?", options: ["HCl", "HF", "HBr", "HI"], answer: "HF" },
+            { question: "Which of the following is a non-benzenoid compound?", options: ["Naphthalene", "Pyridine", "Benzene", "Cyclohexane"], answer: "Cyclohexane" },
+            { question: "The rate of a reaction is determined by:", options: ["The slowest step", "The fastest step", "Any intermediate step", "The catalyst"], answer: "The slowest step" },
+            { question: "Which of the following compounds exhibits optical isomerism?", options: ["Butane", "2-Butanol", "Hexane", "Methanol"], answer: "2-Butanol" },
+            { question: "The most stable oxidation state of Fe is:", options: ["+2", "+3", "+4", "+6"], answer: "+3" },
+            { question: "Which of the following is an example of a heterogeneous catalyst?", options: ["Fe in Haber’s process", "Pt in hydrogenation", "MnO₂ in decomposition of KClO₃", "All of the above"], answer: "All of the above" },
+            { question: "Which of the following is a non-reducing sugar?", options: ["Glucose", "Fructose", "Sucrose", "Maltose"], answer: "Sucrose" },
+            { question: "The functional group present in carboxylic acid is:", options: ["-OH", "-CHO", "-COOH", "-NH₂"], answer: "-COOH" },
+            { question: "The order of reactivity of alcohols towards Lucas reagent is:", options: ["1° > 2° > 3°", "3° > 2° > 1°", "2° > 3° > 1°", "All react at the same rate"], answer: "3° > 2° > 1°" },
+            { question: "The correct increasing order of basicity is:", options: ["NH₃ < CH₃NH₂ < (CH₃)₂NH < (CH₃)₃N", "(CH₃)₃N < (CH₃)₂NH < CH₃NH₂ < NH₃", "NH₃ < (CH₃)₃N < (CH₃)₂NH < CH₃NH₂", "NH₃ < CH₃NH₂ < (CH₃)₃N < (CH₃)₂NH"], answer: "NH₃ < CH₃NH₂ < (CH₃)₂NH < (CH₃)₃N" },
+            { question: "Which of the following will undergo SN1 reaction fastest?", options: ["CH₃Cl", "(CH₃)₃CCl", "CH₃CH₂Cl", "C₆H₅Cl"], answer: "(CH₃)₃CCl" },
+            { question: "The lanthanide contraction is due to:", options: ["Poor shielding by f-electrons", "High nuclear charge", "Strong inter-electron repulsion", "Increase in atomic number"], answer: "Poor shielding by f-electrons" },
+            { question: "The hybridization of carbon in benzene is:", options: ["sp", "sp²", "sp³", "sp³d"], answer: "sp²" },
+            { question: "Which of the following is a common ligand in coordination chemistry?", options: ["Cl⁻", "CN⁻", "NH₃", "All of the above"], answer: "All of the above" }
+        ];
+
+        function loadQuiz() {
+            let quizContainer = document.getElementById("quiz-container");
+            quizContainer.innerHTML = "";
+            quizData.forEach((q, index) => {
+                let questionDiv = document.createElement("div");
+                questionDiv.className = "question-container";
+                questionDiv.innerHTML = `<h3>${index + 1}. ${q.question}</h3>`;
+                q.options.forEach(option => {
+                    let optionBtn = document.createElement("button");
+                    optionBtn.className = "option";
+                    optionBtn.innerText = option;
+                    optionBtn.onclick = function () {
+                        checkAnswer(optionBtn, option, q.answer, index);
+                    };
+                    optionBtn.dataset.questionIndex = index;
+                    questionDiv.appendChild(optionBtn);
+                });
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        function checkAnswer(button, selected, correct, questionIndex) {
+            let buttons = document.querySelectorAll(`.option[data-question-index='${questionIndex}']`);
+            buttons.forEach(btn => btn.classList.add("selected")); // Disable after selection
+            if (selected === correct) {
+                button.classList.add("correct");
+            } else {
+                button.classList.add("wrong");
+            }
+        }
+
+        function submitQuiz() {
+            let correctCount = document.querySelectorAll(".correct").length;
+            let wrongCount = document.querySelectorAll(".wrong").length;
+            let score = (correctCount * 4) - wrongCount;
+            document.getElementById("result").innerText = "Your Score: " + score;
+            document.getElementById("message").innerText = "PARMESHWAR :- ALL THE BEST BRO...";
+        }
+
+        loadQuiz();
+    </script>
+
+</body>
+</html>
