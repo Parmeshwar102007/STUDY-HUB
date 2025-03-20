@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class 12 Physics Quiz</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #1E88E5, #1565C0);
+            color: white;
+            padding: 20px;
+        }
+        .question-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .option {
+            display: block;
+            padding: 10px;
+            margin: 5px auto;
+            background: white;
+            color: black;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            width: 80%;
+        }
+        .option:hover { background: lightgray; }
+        .correct { background-color: green !important; color: white; }
+        .wrong { background-color: red !important; color: white; }
+        .selected { pointer-events: none; } /* Disable after selection */
+    </style>
+</head>
+<body>
+
+    <h1>Class 12 Physics Quiz</h1>
+    <p>+4 for Correct Answer, -1 for Wrong Answer</p>
+    <div id="quiz-container"></div>
+    <button onclick="submitQuiz()">Submit</button>
+    <h2 id="result"></h2>
+    <h3 id="message"></h3>
+
+    <script>
+        const quizData = [
+            { question: "A body is projected with a velocity of 98 m/s at an angle of 30°. What is the time of flight?", options: ["5s", "10s", "15s", "20s"], answer: "10s" },
+            { question: "The dimensional formula of Planck’s constant is:", options: ["ML²T⁻¹", "ML²T⁻²", "M⁻¹L⁻²T³", "MLT⁻³"], answer: "ML²T⁻¹" },
+            { question: "Which law states that the line joining a planet and the sun sweeps equal areas in equal intervals of time?", options: ["Kepler’s First Law", "Kepler’s Second Law", "Kepler’s Third Law", "Newton’s Law"], answer: "Kepler’s Second Law" },
+            { question: "The escape velocity from Earth is approximately:", options: ["9.8 km/s", "11.2 km/s", "13.6 km/s", "15.4 km/s"], answer: "11.2 km/s" },
+            { question: "A capacitor is charged and then disconnected. What happens to the charge?", options: ["It decreases", "It remains constant", "It oscillates", "It increases"], answer: "It remains constant" },
+            { question: "Which of the following waves is longitudinal?", options: ["Light waves", "Radio waves", "Sound waves", "X-rays"], answer: "Sound waves" },
+            { question: "A transformer works on which principle?", options: ["Ohm’s Law", "Electromagnetic Induction", "Lenz’s Law", "Coulomb’s Law"], answer: "Electromagnetic Induction" },
+            { question: "Which of the following particles has no charge?", options: ["Proton", "Electron", "Neutron", "Alpha Particle"], answer: "Neutron" },
+            { question: "The SI unit of resistivity is:", options: ["Ω", "Ωm", "Ω/m", "mΩ"], answer: "Ωm" },
+            { question: "A convex lens of focal length 10 cm is placed in air. What is the power of the lens?", options: ["+10D", "+20D", "-10D", "-20D"], answer: "+10D" },
+            { question: "Which of the following is a scalar quantity?", options: ["Force", "Acceleration", "Velocity", "Work"], answer: "Work" },
+            { question: "The period of a simple pendulum depends on:", options: ["Mass", "Length", "Amplitude", "Velocity"], answer: "Length" },
+            { question: "Which phenomenon explains why stars twinkle?", options: ["Reflection", "Refraction", "Diffraction", "Scattering"], answer: "Refraction" },
+            { question: "The ratio of electric force to gravitational force between two protons is of the order:", options: ["10²⁰", "10³⁶", "10¹⁵", "10¹²"], answer: "10³⁶" },
+            { question: "The magnetic field inside a solenoid is:", options: ["Zero", "Maximum at ends", "Same everywhere", "Varying"], answer: "Same everywhere" },
+            { question: "Which of the following has the highest refractive index?", options: ["Water", "Glass", "Diamond", "Air"], answer: "Diamond" },
+            { question: "A moving charge produces:", options: ["Electric field only", "Magnetic field only", "Both electric & magnetic fields", "No field"], answer: "Both electric & magnetic fields" },
+            { question: "Which of the following is not a property of photons?", options: ["They have zero rest mass", "They carry energy", "They travel slower in a denser medium", "They carry charge"], answer: "They carry charge" },
+            { question: "The principle of conservation of linear momentum is derived from:", options: ["Newton’s First Law", "Newton’s Second Law", "Newton’s Third Law", "Kepler’s Laws"], answer: "Newton’s Third Law" },
+            { question: "A nuclear reactor uses which fuel?", options: ["Coal", "Uranium-235", "Diesel", "Methane"], answer: "Uranium-235" }
+        ];
+
+        function loadQuiz() {
+            let quizContainer = document.getElementById("quiz-container");
+            quizContainer.innerHTML = "";
+            quizData.forEach((q, index) => {
+                let questionDiv = document.createElement("div");
+                questionDiv.className = "question-container";
+                questionDiv.innerHTML = `<h3>${index + 1}. ${q.question}</h3>`;
+                q.options.forEach(option => {
+                    let optionBtn = document.createElement("button");
+                    optionBtn.className = "option";
+                    optionBtn.innerText = option;
+                    optionBtn.onclick = function () {
+                        checkAnswer(optionBtn, option, q.answer, index);
+                    };
+                    optionBtn.dataset.questionIndex = index;
+                    questionDiv.appendChild(optionBtn);
+                });
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        function checkAnswer(button, selected, correct, questionIndex) {
+            let buttons = document.querySelectorAll(`.option[data-question-index='${questionIndex}']`);
+            buttons.forEach(btn => btn.classList.add("selected")); // Disable after selection
+            if (selected === correct) {
+                button.classList.add("correct");
+            } else {
+                button.classList.add("wrong");
+            }
+        }
+
+        function submitQuiz() {
+            let correctCount = document.querySelectorAll(".correct").length;
+            let wrongCount = document.querySelectorAll(".wrong").length;
+            let score = (correctCount * 4) - wrongCount;
+            document.getElementById("result").innerText = "Your Score: " + score;
+            document.getElementById("message").innerText = "PARMESHWAR :- ALL THE BEST BRO...";
+        }
+
+        loadQuiz();
+    </script>
+
+</body>
+</html>
