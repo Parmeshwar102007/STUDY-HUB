@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Quizzes</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #1E88E5, #1565C0);
+            color: white;
+            padding: 20px;
+        }
+        .warning {
+            color: red;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .quiz-button {
+            width: 80%;
+            max-width: 300px;
+            padding: 15px;
+            font-size: 18px;
+            margin: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+            transition: 0.3s;
+            border-radius: 5px;
+        }
+        .quiz-button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <h2 class="warning">Some answers may be INCORRECT so don't panic about that</h2>
+
+    <h1>Practice Quizzes</h1>
+
+    <div class="quiz-container">
+        <!-- Class 10 Quizzes -->
+        <h2>Class 10</h2>
+        <button class="quiz-button" onclick="window.location.href='maths-class10.html'">Maths Quiz Class 10</button>
+        <button class="quiz-button" onclick="window.location.href='science-class10.html'">Science Quiz Class 10</button>
+        <button class="quiz-button" onclick="window.location.href='sst-class10.html'">S.St Quiz Class 10</button>
+
+        <!-- Class 12 Quizzes -->
+        <h2>Class 12</h2>
+        <button class="quiz-button" onclick="window.location.href='maths-class12.html'">Maths Quiz Class 12</button>
+        <button class="quiz-button" onclick="window.location.href='physics-class12.html'">Physics Quiz Class 12</button>
+        <button class="quiz-button" onclick="window.location.href='chemistry-class12.html'">Chemistry Quiz Class 12</button>
+        <button class="quiz-button" onclick="window.location.href='biology-class12.html'">Biology Quiz Class 12</button>
+
+        <!-- JEE Quizzes -->
+        <h2>JEE Quizzes</h2>
+        <button class="quiz-button" onclick="window.location.href='jee-quiz1.html'">JEE Quiz 1</button>
+        <button class="quiz-button" onclick="window.location.href='jee-quiz2.html'">JEE Quiz 2</button>
+        <button class="quiz-button" onclick="window.location.href='jee-quiz3.html'">JEE Quiz 3</button>
+        <button class="quiz-button" onclick="window.location.href='jee-quiz4.html'">JEE Quiz 4</button>
+
+        <!-- NEET Quizzes -->
+        <h2>NEET Quizzes</h2>
+        <button class="quiz-button" onclick="window.location.href='neet-quiz1.html'">NEET Quiz 1</button>
+        <button class="quiz-button" onclick="window.location.href='neet-quiz2.html'">NEET Quiz 2</button>
+        <button class="quiz-button" onclick="window.location.href='neet-quiz3.html'">NEET Quiz 3</button>
+        <button class="quiz-button" onclick="window.location.href='neet-quiz4.html'">NEET Quiz 4</button>
+    </div>
+
+</body>
+</html>
