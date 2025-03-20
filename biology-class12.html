@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class 12 Biology Quiz</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #1E88E5, #1565C0);
+            color: white;
+            padding: 20px;
+        }
+        .question-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .option {
+            display: block;
+            padding: 10px;
+            margin: 5px auto;
+            background: white;
+            color: black;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            width: 80%;
+        }
+        .option:hover { background: lightgray; }
+        .correct { background-color: green !important; color: white; }
+        .wrong { background-color: red !important; color: white; }
+        .selected { pointer-events: none; } /* Disable after selection */
+    </style>
+</head>
+<body>
+
+    <h1>Class 12 Biology Quiz</h1>
+    <p>+4 for Correct Answer, -1 for Wrong Answer</p>
+    <div id="quiz-container"></div>
+    <button onclick="submitQuiz()">Submit</button>
+    <h2 id="result"></h2>
+    <h3 id="message"></h3>
+
+    <script>
+        const quizData = [
+            { question: "Which part of the human brain controls balance and coordination?", options: ["Cerebrum", "Cerebellum", "Medulla", "Thalamus"], answer: "Cerebellum" },
+            { question: "Which hormone is responsible for the regulation of blood calcium levels?", options: ["Insulin", "Glucagon", "Parathyroid Hormone", "Thyroxine"], answer: "Parathyroid Hormone" },
+            { question: "Which plant hormone is responsible for phototropism?", options: ["Auxin", "Gibberellin", "Cytokinin", "Abscisic Acid"], answer: "Auxin" },
+            { question: "Which part of the nephron is involved in the filtration of blood?", options: ["Loop of Henle", "Bowman’s Capsule", "Collecting Duct", "Glomerulus"], answer: "Glomerulus" },
+            { question: "Which vitamin deficiency causes rickets?", options: ["Vitamin A", "Vitamin B", "Vitamin C", "Vitamin D"], answer: "Vitamin D" },
+            { question: "Which of the following is the functional unit of a kidney?", options: ["Nephron", "Neuron", "Alveoli", "Hepatocyte"], answer: "Nephron" },
+            { question: "Which enzyme is responsible for the breakdown of proteins in the stomach?", options: ["Amylase", "Lipase", "Pepsin", "Trypsin"], answer: "Pepsin" },
+            { question: "Which process is used for ATP production in the absence of oxygen?", options: ["Glycolysis", "Krebs Cycle", "Electron Transport Chain", "Fermentation"], answer: "Fermentation" },
+            { question: "Which blood group is considered the universal donor?", options: ["A", "B", "AB", "O"], answer: "O" },
+            { question: "Which of the following is not a connective tissue?", options: ["Blood", "Bone", "Muscle", "Cartilage"], answer: "Muscle" },
+            { question: "Which structure in plants transports water?", options: ["Xylem", "Phloem", "Cortex", "Epidermis"], answer: "Xylem" },
+            { question: "Which microorganism is used in the production of insulin?", options: ["Yeast", "E. coli", "Lactobacillus", "Penicillium"], answer: "E. coli" },
+            { question: "What is the primary function of the large intestine?", options: ["Digestion", "Absorption of nutrients", "Water absorption", "Protein synthesis"], answer: "Water absorption" },
+            { question: "Which of the following is an example of an exocrine gland?", options: ["Thyroid gland", "Pituitary gland", "Sweat gland", "Adrenal gland"], answer: "Sweat gland" },
+            { question: "What is the role of hemoglobin in blood?", options: ["Transport oxygen", "Fight infections", "Help in clotting", "Regulate pH"], answer: "Transport oxygen" },
+            { question: "Which phase of mitosis involves chromosome alignment at the cell equator?", options: ["Prophase", "Metaphase", "Anaphase", "Telophase"], answer: "Metaphase" },
+            { question: "Which is the largest artery in the human body?", options: ["Pulmonary artery", "Carotid artery", "Aorta", "Femoral artery"], answer: "Aorta" },
+            { question: "Which part of the plant is responsible for transpiration?", options: ["Stem", "Root", "Leaf", "Flower"], answer: "Leaf" },
+            { question: "Which biomolecule acts as the genetic material in most organisms?", options: ["Protein", "Carbohydrate", "DNA", "Lipid"], answer: "DNA" },
+            { question: "Which of the following diseases is caused by a virus?", options: ["Tuberculosis", "Typhoid", "Influenza", "Cholera"], answer: "Influenza" }
+        ];
+
+        function loadQuiz() {
+            let quizContainer = document.getElementById("quiz-container");
+            quizContainer.innerHTML = "";
+            quizData.forEach((q, index) => {
+                let questionDiv = document.createElement("div");
+                questionDiv.className = "question-container";
+                questionDiv.innerHTML = `<h3>${index + 1}. ${q.question}</h3>`;
+                q.options.forEach(option => {
+                    let optionBtn = document.createElement("button");
+                    optionBtn.className = "option";
+                    optionBtn.innerText = option;
+                    optionBtn.onclick = function () {
+                        checkAnswer(optionBtn, option, q.answer, index);
+                    };
+                    optionBtn.dataset.questionIndex = index;
+                    questionDiv.appendChild(optionBtn);
+                });
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        function checkAnswer(button, selected, correct, questionIndex) {
+            let buttons = document.querySelectorAll(`.option[data-question-index='${questionIndex}']`);
+            buttons.forEach(btn => btn.classList.add("selected")); // Disable after selection
+            if (selected === correct) {
+                button.classList.add("correct");
+            } else {
+                button.classList.add("wrong");
+            }
+        }
+
+        function submitQuiz() {
+            let correctCount = document.querySelectorAll(".correct").length;
+            let wrongCount = document.querySelectorAll(".wrong").length;
+            let score = (correctCount * 4) - wrongCount;
+            document.getElementById("result").innerText = "Your Score: " + score;
+            document.getElementById("message").innerText = "PARMESHWAR :- ALL THE BEST BRO...";
+        }
+
+        loadQuiz();
+    </script>
+
+</body>
+</html>
