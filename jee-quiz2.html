@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE Quiz 2</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #1E88E5, #1565C0);
+            color: white;
+            padding: 20px;
+        }
+        .question-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .option {
+            display: block;
+            padding: 10px;
+            margin: 5px auto;
+            background: white;
+            color: black;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            width: 80%;
+        }
+        .option:hover { background: lightgray; }
+        .correct { background-color: green !important; color: white; }
+        .wrong { background-color: red !important; color: white; }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+    <h1>JEE Mains Quiz 2</h1>
+    <p>+4 for Correct Answer, -1 for Wrong Answer</p>
+    <div id="quiz-container"></div>
+    <button onclick="submitQuiz()">Submit</button>
+    <h2 id="result"></h2>
+    <h3 id="message"></h3>
+
+    <script>
+        const quizData = [
+            { question: "A bullet of mass m is fired from a gun of mass M with a velocity v. What is the recoil velocity of the gun?", options: ["mv/M", "M/mv", "v/m", "M/v"], answer: "mv/M" },
+            { question: "A satellite is revolving around Earth at a height h. If the radius of Earth is R, the total energy of the satellite is:", options: ["GMm/2(R+h)", "-GMm/2(R+h)", "-GMm/(R+h)", "Zero"], answer: "-GMm/2(R+h)" },
+            { question: "A particle moves in a circular orbit of radius r with velocity v. The centripetal force required is proportional to:", options: ["v²/r", "r/v²", "v/r²", "r²/v"], answer: "v²/r" },
+            { question: "The moment of inertia of a thin rod of length L and mass M about an axis passing through its center and perpendicular to its length is:", options: ["ML²/12", "ML²/3", "ML²/6", "ML²/4"], answer: "ML²/12" },
+            { question: "A Carnot engine operates between temperatures 600K and 300K. The efficiency of the engine is:", options: ["25%", "50%", "60%", "75%"], answer: "50%" },
+            { question: "A charged particle enters a perpendicular uniform magnetic field. Its path will be:", options: ["Parabolic", "Circular", "Helical", "Straight"], answer: "Circular" },
+            { question: "The equation of continuity in fluid mechanics is based on:", options: ["Conservation of mass", "Conservation of momentum", "Conservation of energy", "Newton’s second law"], answer: "Conservation of mass" },
+            { question: "The wavelength of the first line of the Balmer series for hydrogen is:", options: ["656 nm", "121 nm", "410 nm", "434 nm"], answer: "656 nm" },
+            { question: "The entropy of a system always increases in:", options: ["Reversible processes", "Isothermal processes", "Irreversible processes", "Adiabatic processes"], answer: "Irreversible processes" },
+            { question: "A wire of resistance R is stretched to double its original length. What is the new resistance?", options: ["R/2", "2R", "4R", "R/4"], answer: "4R" },
+            { question: "If the speed of sound in air is 340 m/s, what is its wavelength at a frequency of 1700 Hz?", options: ["0.2 m", "0.4 m", "0.6 m", "0.8 m"], answer: "0.2 m" },
+            { question: "Which of the following is an incorrect statement about the photoelectric effect?", options: ["Energy of emitted electrons is proportional to intensity", "It supports the particle nature of light", "There is a threshold frequency", "Photoelectric current depends on intensity"], answer: "Energy of emitted electrons is proportional to intensity" },
+            { question: "A conducting loop is placed in a time-varying magnetic field. The induced EMF depends on:", options: ["Rate of change of flux", "Magnetic field strength only", "Shape of the loop only", "Mass of the loop"], answer: "Rate of change of flux" },
+            { question: "A gas expands adiabatically. What happens to its internal energy?", options: ["Increases", "Decreases", "Remains constant", "Depends on heat supplied"], answer: "Decreases" },
+            { question: "A convex lens of focal length 10 cm is placed in contact with a concave lens of focal length 20 cm. The resultant focal length is:", options: ["20 cm", "-20 cm", "30 cm", "10 cm"], answer: "20 cm" },
+            { question: "Which of the following gases has the highest root mean square velocity at the same temperature?", options: ["O₂", "N₂", "H₂", "CO₂"], answer: "H₂" },
+            { question: "A force of 10 N acts on a body of mass 5 kg for 2 seconds. What is the final velocity if it starts from rest?", options: ["4 m/s", "6 m/s", "2 m/s", "10 m/s"], answer: "4 m/s" },
+            { question: "A charge q moves in a uniform electric field E. The work done by the field is given by:", options: ["qEd", "qE/d", "qE²", "qE/d²"], answer: "qEd" },
+            { question: "A black body at temperature T emits radiation of maximum intensity at wavelength λ. If its temperature is doubled, the new peak wavelength is:", options: ["λ/2", "2λ", "λ/4", "4λ"], answer: "λ/2" },
+            { question: "Which of the following laws is used to derive the Stefan-Boltzmann law?", options: ["Wien’s law", "Planck’s law", "Kirchhoff’s law", "Boyle’s law"], answer: "Planck’s law" }
+        ];
+
+        function loadQuiz() {
+            let quizContainer = document.getElementById("quiz-container");
+            quizData.forEach((q, index) => {
+                let questionDiv = document.createElement("div");
+                questionDiv.className = "question-container";
+                questionDiv.innerHTML = `<h3>${index + 1}. ${q.question}</h3>`;
+                q.options.forEach(option => {
+                    let optionBtn = document.createElement("button");
+                    optionBtn.className = "option";
+                    optionBtn.innerText = option;
+                    optionBtn.onclick = function () {
+                        checkAnswer(optionBtn, option, q.answer, index);
+                    };
+                    optionBtn.dataset.questionIndex = index;
+                    questionDiv.appendChild(optionBtn);
+                });
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        function submitQuiz() {
+            let correctCount = document.querySelectorAll(".correct").length;
+            let wrongCount = document.querySelectorAll(".wrong").length;
+            let score = (correctCount * 4) - wrongCount;
+            document.getElementById("result").innerText = "Your Score: " + score;
+            document.getElementById("message").innerText = "PARMESHWAR :- ALL THE BEST BRO...";
+        }
+
+        loadQuiz();
+    </script>
+
+</body>
+</html>
