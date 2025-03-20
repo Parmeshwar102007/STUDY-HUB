@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class 10 SST Quiz</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #1E88E5, #1565C0);
+            color: white;
+            padding: 20px;
+        }
+        .question-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .option {
+            display: block;
+            padding: 10px;
+            margin: 5px auto;
+            background: white;
+            color: black;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            width: 80%;
+        }
+        .option:hover { background: lightgray; }
+        .correct { background-color: green !important; color: white; }
+        .wrong { background-color: red !important; color: white; }
+        .selected { pointer-events: none; } /* Disable after selection */
+    </style>
+</head>
+<body>
+
+    <h1>Class 10 Social Science Quiz</h1>
+    <p>+4 for Correct Answer, -1 for Wrong Answer</p>
+    <div id="quiz-container"></div>
+    <button onclick="submitQuiz()">Submit</button>
+    <h2 id="result"></h2>
+    <h3 id="message"></h3>
+
+    <script>
+        const quizData = [
+            // History
+            { question: "Who was the first Governor-General of independent India?", options: ["Jawaharlal Nehru", "C. Rajagopalachari", "Lord Mountbatten", "Dr. B.R. Ambedkar"], answer: "Lord Mountbatten" },
+            { question: "When did the Revolt of 1857 begin?", options: ["1856", "1857", "1860", "1871"], answer: "1857" },
+            { question: "Who wrote the book 'Discovery of India'?", options: ["Subhash Chandra Bose", "Jawaharlal Nehru", "Mahatma Gandhi", "Rabindranath Tagore"], answer: "Jawaharlal Nehru" },
+            { question: "Who was known as the ‘Iron Man of India’?", options: ["Bhagat Singh", "Lal Bahadur Shastri", "Sardar Vallabhbhai Patel", "Subhash Chandra Bose"], answer: "Sardar Vallabhbhai Patel" },
+            { question: "Which event led to the formation of the Non-Cooperation Movement?", options: ["Dandi March", "Partition of Bengal", "Jallianwala Bagh Massacre", "Quit India Movement"], answer: "Jallianwala Bagh Massacre" },
+
+            // Geography
+            { question: "Which is the longest river in India?", options: ["Ganga", "Brahmaputra", "Yamuna", "Indus"], answer: "Ganga" },
+            { question: "The Tropic of Cancer passes through how many Indian states?", options: ["6", "7", "8", "9"], answer: "8" },
+            { question: "Which state is the largest producer of wheat in India?", options: ["Punjab", "Uttar Pradesh", "Madhya Pradesh", "Haryana"], answer: "Uttar Pradesh" },
+            { question: "What is the name of the highest peak in the Himalayas located in India?", options: ["K2", "Kangchenjunga", "Mount Everest", "Nanda Devi"], answer: "Kangchenjunga" },
+            { question: "Which type of soil is best suited for cotton cultivation?", options: ["Black soil", "Red soil", "Laterite soil", "Alluvial soil"], answer: "Black soil" },
+
+            // Political Science
+            { question: "Which article of the Indian Constitution guarantees the Right to Equality?", options: ["Article 12", "Article 14", "Article 19", "Article 21"], answer: "Article 14" },
+            { question: "Who is the head of the Lok Sabha?", options: ["The President", "The Vice-President", "The Prime Minister", "The Speaker"], answer: "The Speaker" },
+            { question: "Which fundamental right is known as the 'Heart and Soul' of the Constitution?", options: ["Right to Equality", "Right to Freedom", "Right to Constitutional Remedies", "Right against Exploitation"], answer: "Right to Constitutional Remedies" },
+            { question: "Who appoints the Chief Justice of India?", options: ["Prime Minister", "Lok Sabha", "President", "Supreme Court Judges"], answer: "President" },
+            { question: "Which body is responsible for conducting elections in India?", options: ["Lok Sabha", "Election Commission", "Supreme Court", "Rajya Sabha"], answer: "Election Commission" },
+
+            // Economics
+            { question: "Which sector is known as the 'Backbone of the Indian Economy'?", options: ["Agriculture", "Service", "Manufacturing", "Mining"], answer: "Agriculture" },
+            { question: "Which is the central bank of India?", options: ["State Bank of India", "Reserve Bank of India", "ICICI Bank", "Punjab National Bank"], answer: "Reserve Bank of India" },
+            { question: "What is the full form of GDP?", options: ["Gross Domestic Product", "General Development Plan", "Government Data Processing", "Global Development Plan"], answer: "Gross Domestic Product" },
+            { question: "Which Indian state has the highest per capita income?", options: ["Uttar Pradesh", "Goa", "Bihar", "Maharashtra"], answer: "Goa" },
+            { question: "Which tax was replaced by GST in India?", options: ["Income Tax", "Value Added Tax (VAT)", "Wealth Tax", "Customs Duty"], answer: "Value Added Tax (VAT)" }
+        ];
+
+        function loadQuiz() {
+            let quizContainer = document.getElementById("quiz-container");
+            quizContainer.innerHTML = "";
+            quizData.forEach((q, index) => {
+                let questionDiv = document.createElement("div");
+                questionDiv.className = "question-container";
+                questionDiv.innerHTML = `<h3>${index + 1}. ${q.question}</h3>`;
+                q.options.forEach(option => {
+                    let optionBtn = document.createElement("button");
+                    optionBtn.className = "option";
+                    optionBtn.innerText = option;
+                    optionBtn.onclick = function () {
+                        checkAnswer(optionBtn, option, q.answer, index);
+                    };
+                    optionBtn.dataset.questionIndex = index;
+                    questionDiv.appendChild(optionBtn);
+                });
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        function checkAnswer(button, selected, correct, questionIndex) {
+            let buttons = document.querySelectorAll(`.option[data-question-index='${questionIndex}']`);
+            buttons.forEach(btn => btn.classList.add("selected")); // Disable after selection
+            if (selected === correct) {
+                button.classList.add("correct");
+            } else {
+                button.classList.add("wrong");
+            }
+        }
+
+        function submitQuiz() {
+            let correctCount = document.querySelectorAll(".correct").length;
+            let wrongCount = document.querySelectorAll(".wrong").length;
+            let score = (correctCount * 4) - wrongCount;
+            document.getElementById("result").innerText = "Your Score: " + score;
+            document.getElementById("message").innerText = "PARMESHWAR :- ALL THE BEST BRO...";
+        }
+
+        loadQuiz();
+    </script>
+
+</body>
+</html>
