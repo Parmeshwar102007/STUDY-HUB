@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEET Combined Quiz 3</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #1E88E5, #1565C0);
+            color: white;
+            padding: 20px;
+        }
+        .question-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .option {
+            display: block;
+            padding: 10px;
+            margin: 5px auto;
+            background: white;
+            color: black;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            width: 80%;
+        }
+        .option:hover { background: lightgray; }
+        .correct { background-color: green !important; color: white; }
+        .wrong { background-color: red !important; color: white; }
+        .selected { pointer-events: none; } /* Disable after selection */
+    </style>
+</head>
+<body>
+
+    <h1>NEET Combined Quiz 3 (Physics, Chemistry, Biology)</h1>
+    <p>+4 for Correct Answer, -1 for Wrong Answer</p>
+    <div id="quiz-container"></div>
+    <button onclick="submitQuiz()">Submit</button>
+    <h2 id="result"></h2>
+    <h3 id="message"></h3>
+
+    <script>
+        const quizData = [
+            // Physics
+            { question: "The escape velocity from Earth is about:", options: ["9.8 km/s", "11.2 km/s", "7.9 km/s", "15.4 km/s"], answer: "11.2 km/s" },
+            { question: "What is the dimensional formula for Planck’s constant?", options: ["ML²T⁻¹", "MLT⁻²", "ML²T⁻³", "ML⁻¹T⁻²"], answer: "ML²T⁻¹" },
+            { question: "The focal length of a convex lens in air decreases when:", options: ["Placed in vacuum", "Placed in water", "Radius increases", "Lens material changes"], answer: "Placed in water" },
+            { question: "A ball is dropped from a height of 10m. What is its velocity just before hitting the ground? (g = 10m/s²)", options: ["5 m/s", "10 m/s", "14 m/s", "20 m/s"], answer: "14 m/s" },
+            { question: "If the force on an object is doubled, its acceleration will:", options: ["Remain the same", "Double", "Halve", "Become zero"], answer: "Double" },
+
+            // Chemistry
+            { question: "Which of the following has the highest electron affinity?", options: ["Fluorine", "Oxygen", "Chlorine", "Nitrogen"], answer: "Chlorine" },
+            { question: "The shape of an ammonia (NH₃) molecule is:", options: ["Tetrahedral", "Trigonal planar", "Trigonal pyramidal", "Linear"], answer: "Trigonal pyramidal" },
+            { question: "Which element has the highest electronegativity?", options: ["Hydrogen", "Oxygen", "Fluorine", "Nitrogen"], answer: "Fluorine" },
+            { question: "pH of a 0.001 M HCl solution is:", options: ["1", "2", "3", "4"], answer: "3" },
+            { question: "Which type of hybridization is found in methane (CH₄)?", options: ["sp", "sp²", "sp³", "dsp²"], answer: "sp³" },
+
+            // Biology
+            { question: "Which hormone is called the stress hormone?", options: ["Insulin", "Cortisol", "Glucagon", "Adrenaline"], answer: "Cortisol" },
+            { question: "Which of the following has a double circulatory system?", options: ["Fish", "Frog", "Reptiles", "Mammals"], answer: "Mammals" },
+            { question: "Which of the following is the longest bone in the human body?", options: ["Humerus", "Femur", "Tibia", "Fibula"], answer: "Femur" },
+            { question: "Which vitamin is essential for vision?", options: ["Vitamin A", "Vitamin B", "Vitamin C", "Vitamin D"], answer: "Vitamin A" },
+            { question: "The primary function of the large intestine is:", options: ["Digestion", "Absorption of water", "Secretion of enzymes", "Absorption of nutrients"], answer: "Absorption of water" },
+            { question: "Which part of the brain controls body temperature?", options: ["Cerebrum", "Cerebellum", "Medulla oblongata", "Hypothalamus"], answer: "Hypothalamus" },
+            { question: "Which structure in plants transports food?", options: ["Xylem", "Phloem", "Cambium", "Epidermis"], answer: "Phloem" },
+            { question: "Which disease is caused by Plasmodium?", options: ["Typhoid", "Dengue", "Malaria", "Tuberculosis"], answer: "Malaria" },
+            { question: "Which blood group is known as the universal recipient?", options: ["A", "B", "O", "AB"], answer: "AB" },
+            { question: "Which enzyme breaks down starch into maltose?", options: ["Pepsin", "Amylase", "Lipase", "Maltase"], answer: "Amylase" }
+        ];
+
+        function loadQuiz() {
+            let quizContainer = document.getElementById("quiz-container");
+            quizContainer.innerHTML = "";
+            quizData.forEach((q, index) => {
+                let questionDiv = document.createElement("div");
+                questionDiv.className = "question-container";
+                questionDiv.innerHTML = `<h3>${index + 1}. ${q.question}</h3>`;
+                q.options.forEach(option => {
+                    let optionBtn = document.createElement("button");
+                    optionBtn.className = "option";
+                    optionBtn.innerText = option;
+                    optionBtn.onclick = function () {
+                        checkAnswer(optionBtn, option, q.answer, index);
+                    };
+                    optionBtn.dataset.questionIndex = index;
+                    questionDiv.appendChild(optionBtn);
+                });
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        function checkAnswer(button, selected, correct, questionIndex) {
+            let buttons = document.querySelectorAll(`.option[data-question-index='${questionIndex}']`);
+            buttons.forEach(btn => btn.classList.add("selected")); // Disable after selection
+            if (selected === correct) {
+                button.classList.add("correct");
+            } else {
+                button.classList.add("wrong");
+            }
+        }
+
+        function submitQuiz() {
+            let correctCount = document.querySelectorAll(".correct").length;
+            let wrongCount = document.querySelectorAll(".wrong").length;
+            let score = (correctCount * 4) - wrongCount;
+            document.getElementById("result").innerText = "Your Score: " + score;
+            document.getElementById("message").innerText = "PARMESHWAR :- ALL THE BEST BRO...";
+        }
+
+        loadQuiz();
+    </script>
+
+</body>
+</html>
