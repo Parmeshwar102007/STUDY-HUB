@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class 12 Maths Quiz</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #1E88E5, #1565C0);
+            color: white;
+            padding: 20px;
+        }
+        .question-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .option {
+            display: block;
+            padding: 10px;
+            margin: 5px auto;
+            background: white;
+            color: black;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            width: 80%;
+        }
+        .option:hover { background: lightgray; }
+        .correct { background-color: green !important; color: white; }
+        .wrong { background-color: red !important; color: white; }
+        .selected { pointer-events: none; } /* Disable after selection */
+    </style>
+</head>
+<body>
+
+    <h1>Class 12 Mathematics Quiz</h1>
+    <p>+4 for Correct Answer, -1 for Wrong Answer</p>
+    <div id="quiz-container"></div>
+    <button onclick="submitQuiz()">Submit</button>
+    <h2 id="result"></h2>
+    <h3 id="message"></h3>
+
+    <script>
+        const quizData = [
+            { question: "The determinant of a 3x3 identity matrix is:", options: ["0", "1", "-1", "3"], answer: "1" },
+            { question: "If f(x) = x³ + x² - 3x + 2, then f'(x) at x = 1 is:", options: ["3", "0", "2", "5"], answer: "2" },
+            { question: "The integral of sec²x dx is:", options: ["tan x + C", "cos x + C", "sin x + C", "sec x + C"], answer: "tan x + C" },
+            { question: "What is the inverse of the function f(x) = e^x?", options: ["log x", "ln x", "e^-x", "1/x"], answer: "ln x" },
+            { question: "What is the area enclosed by y = x² and y = 4?", options: ["16/3", "8/3", "4/3", "32/3"], answer: "32/3" },
+            { question: "The derivative of sin(2x) is:", options: ["cos(2x)", "2cos(2x)", "sin(2x)", "-sin(2x)"], answer: "2cos(2x)" },
+            { question: "If A and B are two events such that P(A) = 0.4, P(B) = 0.5, and P(A ∩ B) = 0.2, find P(A ∪ B).", options: ["0.9", "0.7", "0.6", "1"], answer: "0.7" },
+            { question: "The sum of an infinite geometric series with first term 5 and common ratio 1/3 is:", options: ["6", "7.5", "10", "15"], answer: "7.5" },
+            { question: "The sum of the roots of the equation 2x² - 3x + 1 = 0 is:", options: ["3/2", "-3/2", "1", "2"], answer: "3/2" },
+            { question: "If A and B are square matrices of the same order, which of the following is true?", options: ["(AB)² = A²B²", "(A+B)² = A² + 2AB + B²", "AB = BA always", "A + B = B + A"], answer: "A + B = B + A" },
+            { question: "The radius of curvature at x = 1 for the curve y = x³ - 3x² + 4 is:", options: ["1", "2", "3", "4"], answer: "2" },
+            { question: "If the vectors a = (2,3,4) and b = (1,-1,2), then a.b is:", options: ["6", "8", "10", "12"], answer: "12" },
+            { question: "The differential equation whose solution is y = Ce^(-3x) is:", options: ["dy/dx = 3y", "dy/dx + 3y = 0", "dy/dx - 3y = 0", "dy/dx = -3y"], answer: "dy/dx + 3y = 0" },
+            { question: "The probability of getting exactly 2 heads in 4 coin tosses is:", options: ["1/4", "3/8", "1/2", "5/8"], answer: "3/8" },
+            { question: "Which of the following functions is always increasing?", options: ["x²", "x³", "x⁴", "e^x"], answer: "e^x" },
+            { question: "The eccentricity of a hyperbola x²/a² - y²/b² = 1 is:", options: ["√(1 - b²/a²)", "√(1 + b²/a²)", "a/b", "b/a"], answer: "√(1 + b²/a²)" },
+            { question: "The maximum value of the function f(x) = sin x + cos x is:", options: ["√2", "1", "2", "1/2"], answer: "√2" },
+            { question: "The solution of the equation 2log(x) = log(16) is:", options: ["2", "3", "4", "5"], answer: "4" },
+            { question: "If the mean and variance of a normal distribution are 10 and 4, respectively, the standard deviation is:", options: ["2", "4", "8", "16"], answer: "2" }
+        ];
+
+        function loadQuiz() {
+            let quizContainer = document.getElementById("quiz-container");
+            quizContainer.innerHTML = "";
+            quizData.forEach((q, index) => {
+                let questionDiv = document.createElement("div");
+                questionDiv.className = "question-container";
+                questionDiv.innerHTML = `<h3>${index + 1}. ${q.question}</h3>`;
+                q.options.forEach(option => {
+                    let optionBtn = document.createElement("button");
+                    optionBtn.className = "option";
+                    optionBtn.innerText = option;
+                    optionBtn.onclick = function () {
+                        checkAnswer(optionBtn, option, q.answer, index);
+                    };
+                    optionBtn.dataset.questionIndex = index;
+                    questionDiv.appendChild(optionBtn);
+                });
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        function checkAnswer(button, selected, correct, questionIndex) {
+            let buttons = document.querySelectorAll(`.option[data-question-index='${questionIndex}']`);
+            buttons.forEach(btn => btn.classList.add("selected")); // Disable after selection
+            if (selected === correct) {
+                button.classList.add("correct");
+            } else {
+                button.classList.add("wrong");
+            }
+        }
+
+        function submitQuiz() {
+            let correctCount = document.querySelectorAll(".correct").length;
+            let wrongCount = document.querySelectorAll(".wrong").length;
+            let score = (correctCount * 4) - wrongCount;
+            document.getElementById("result").innerText = "Your Score: " + score;
+            document.getElementById("message").innerText = "PARMESHWAR :- ALL THE BEST BRO...";
+        }
+
+        loadQuiz();
+    </script>
+
+</body>
+</html>
