@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class 10 Science Quiz</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #1E88E5, #1565C0);
+            color: white;
+            padding: 20px;
+        }
+        .question-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .option {
+            display: block;
+            padding: 10px;
+            margin: 5px auto;
+            background: white;
+            color: black;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            width: 80%;
+        }
+        .option:hover { background: lightgray; }
+        .correct { background-color: green !important; color: white; }
+        .wrong { background-color: red !important; color: white; }
+        .selected { pointer-events: none; } /* Disable after selection */
+    </style>
+</head>
+<body>
+
+    <h1>Class 10 Science Quiz</h1>
+    <p>+4 for Correct Answer, -1 for Wrong Answer</p>
+    <div id="quiz-container"></div>
+    <button onclick="submitQuiz()">Submit</button>
+    <h2 id="result"></h2>
+    <h3 id="message"></h3>
+
+    <script>
+        const quizData = [
+            // Physics
+            { question: "What is the SI unit of electric current?", options: ["Watt", "Coulomb", "Ampere", "Ohm"], answer: "Ampere" },
+            { question: "Which mirror is used in vehicle rear-view mirrors?", options: ["Concave", "Convex", "Plane", "Cylindrical"], answer: "Convex" },
+            { question: "What is the acceleration due to gravity on Earth?", options: ["8.9 m/s²", "9.8 m/s²", "10.2 m/s²", "9.2 m/s²"], answer: "9.8 m/s²" },
+            { question: "Which lens is used to correct myopia?", options: ["Convex", "Concave", "Plano-convex", "Cylindrical"], answer: "Concave" },
+            { question: "Which type of energy is stored in a stretched rubber band?", options: ["Kinetic", "Thermal", "Potential", "Electrical"], answer: "Potential" },
+
+            // Chemistry
+            { question: "What is the chemical formula of baking soda?", options: ["NaCl", "NaHCO₃", "CaCO₃", "K₂CO₃"], answer: "NaHCO₃" },
+            { question: "Which metal is the most reactive in the reactivity series?", options: ["Copper", "Gold", "Potassium", "Iron"], answer: "Potassium" },
+            { question: "Which gas is evolved when an acid reacts with a metal?", options: ["Oxygen", "Hydrogen", "Carbon dioxide", "Nitrogen"], answer: "Hydrogen" },
+            { question: "Which of the following is an exothermic reaction?", options: ["Melting of ice", "Dissolution of ammonium chloride", "Burning of coal", "Evaporation of water"], answer: "Burning of coal" },
+            { question: "What is the pH value of pure water?", options: ["5", "6", "7", "8"], answer: "7" },
+
+            // Biology
+            { question: "Which part of the plant is responsible for photosynthesis?", options: ["Root", "Stem", "Leaf", "Flower"], answer: "Leaf" },
+            { question: "Which part of the human digestive system absorbs nutrients?", options: ["Stomach", "Small intestine", "Large intestine", "Esophagus"], answer: "Small intestine" },
+            { question: "Which gas do plants release during photosynthesis?", options: ["Oxygen", "Carbon dioxide", "Nitrogen", "Methane"], answer: "Oxygen" },
+            { question: "Which blood component helps in clotting?", options: ["Red blood cells", "White blood cells", "Platelets", "Plasma"], answer: "Platelets" },
+            { question: "Which organ produces insulin in the human body?", options: ["Liver", "Pancreas", "Kidney", "Heart"], answer: "Pancreas" },
+
+            // General Science
+            { question: "Which planet is known as the Red Planet?", options: ["Earth", "Mars", "Jupiter", "Venus"], answer: "Mars" },
+            { question: "Which gas is most abundant in Earth's atmosphere?", options: ["Oxygen", "Nitrogen", "Carbon dioxide", "Argon"], answer: "Nitrogen" },
+            { question: "What is the boiling point of water at sea level?", options: ["90°C", "100°C", "110°C", "120°C"], answer: "100°C" },
+            { question: "Which vitamin is produced in the human body when exposed to sunlight?", options: ["Vitamin A", "Vitamin C", "Vitamin D", "Vitamin K"], answer: "Vitamin D" },
+            { question: "What is the hardest natural substance on Earth?", options: ["Gold", "Iron", "Diamond", "Graphite"], answer: "Diamond" }
+        ];
+
+        function loadQuiz() {
+            let quizContainer = document.getElementById("quiz-container");
+            quizContainer.innerHTML = "";
+            quizData.forEach((q, index) => {
+                let questionDiv = document.createElement("div");
+                questionDiv.className = "question-container";
+                questionDiv.innerHTML = `<h3>${index + 1}. ${q.question}</h3>`;
+                q.options.forEach(option => {
+                    let optionBtn = document.createElement("button");
+                    optionBtn.className = "option";
+                    optionBtn.innerText = option;
+                    optionBtn.onclick = function () {
+                        checkAnswer(optionBtn, option, q.answer, index);
+                    };
+                    optionBtn.dataset.questionIndex = index;
+                    questionDiv.appendChild(optionBtn);
+                });
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        function checkAnswer(button, selected, correct, questionIndex) {
+            let buttons = document.querySelectorAll(`.option[data-question-index='${questionIndex}']`);
+            buttons.forEach(btn => btn.classList.add("selected")); // Disable after selection
+            if (selected === correct) {
+                button.classList.add("correct");
+            } else {
+                button.classList.add("wrong");
+            }
+        }
+
+        function submitQuiz() {
+            let correctCount = document.querySelectorAll(".correct").length;
+            let wrongCount = document.querySelectorAll(".wrong").length;
+            let score = (correctCount * 4) - wrongCount;
+            document.getElementById("result").innerText = "Your Score: " + score;
+            document.getElementById("message").innerText = "PARMESHWAR :- ALL THE BEST BRO...";
+        }
+
+        loadQuiz();
+    </script>
+
+</body>
+</html>
