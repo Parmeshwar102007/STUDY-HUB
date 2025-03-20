@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE Quiz 3</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #1E88E5, #1565C0);
+            color: white;
+            padding: 20px;
+        }
+        .question-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .option {
+            display: block;
+            padding: 10px;
+            margin: 5px auto;
+            background: white;
+            color: black;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            width: 80%;
+        }
+        .option:hover { background: lightgray; }
+        .correct { background-color: green !important; color: white; }
+        .wrong { background-color: red !important; color: white; }
+        .selected { pointer-events: none; } /* Disable after selection */
+    </style>
+</head>
+<body>
+
+    <h1>JEE Mains Quiz 3</h1>
+    <p>+4 for Correct Answer, -1 for Wrong Answer</p>
+    <div id="quiz-container"></div>
+    <button onclick="submitQuiz()">Submit</button>
+    <h2 id="result"></h2>
+    <h3 id="message"></h3>
+
+    <script>
+        const quizData = [
+            { question: "A block slides down a rough inclined plane. What is the work done by friction?", options: ["Positive", "Negative", "Zero", "Depends on angle"], answer: "Negative" },
+            { question: "The energy required to remove an electron from an atom is called:", options: ["Electron affinity", "Ionization energy", "Binding energy", "Work function"], answer: "Ionization energy" },
+            { question: "A body is projected at an angle of 30° with an initial velocity of 40 m/s. What is the time of flight?", options: ["2s", "4s", "6s", "8s"], answer: "4s" },
+            { question: "Which law of thermodynamics states that entropy always increases?", options: ["First law", "Second law", "Third law", "Zeroth law"], answer: "Second law" },
+            { question: "The escape velocity of Earth is approximately:", options: ["7.9 km/s", "11.2 km/s", "15.8 km/s", "20.5 km/s"], answer: "11.2 km/s" },
+            { question: "A satellite moving in a circular orbit has kinetic energy K. What is its total energy?", options: ["K", "-K", "2K", "-2K"], answer: "-K" },
+            { question: "The radius of the first orbit of hydrogen is:", options: ["0.53 Å", "1.06 Å", "2.12 Å", "4.24 Å"], answer: "0.53 Å" },
+            { question: "A Carnot engine absorbs heat at 1000K and rejects at 500K. Its efficiency is:", options: ["25%", "50%", "75%", "100%"], answer: "50%" },
+            { question: "A light wave undergoes a phase change of π on reflection from:", options: ["A denser medium", "A rarer medium", "A transparent medium", "No medium"], answer: "A denser medium" },
+            { question: "A rod of length L expands by ΔL when heated. The coefficient of linear expansion is:", options: ["ΔL/L", "ΔL/T", "ΔL/LT", "ΔL/TL"], answer: "ΔL/LT" },
+            { question: "The potential energy of an oscillating spring is maximum when:", options: ["At equilibrium", "At extreme position", "At mid-way", "Always zero"], answer: "At extreme position" },
+            { question: "A thin convex lens is placed in contact with a concave lens of the same focal length. The resulting system behaves as:", options: ["A convex lens", "A concave lens", "A plane glass", "A mirror"], answer: "A plane glass" },
+            { question: "The SI unit of pressure is:", options: ["Pascal", "Newton", "Joule", "Dyne"], answer: "Pascal" },
+            { question: "A conducting wire is bent into a circular loop. The magnetic field at the center due to current I is proportional to:", options: ["I", "I²", "1/I", "1/I²"], answer: "I" },
+            { question: "Which of the following statements is true for a stationary wave?", options: ["Energy is transmitted", "Particles move in circles", "Nodes and antinodes are formed", "Wave speed is infinite"], answer: "Nodes and antinodes are formed" },
+            { question: "A resistor R and inductor L are connected in series with AC supply. The phase difference between voltage and current is:", options: ["0°", "90°", "45°", "180°"], answer: "90°" },
+            { question: "The time period of a simple pendulum depends on:", options: ["Mass", "Amplitude", "Length", "Both mass and length"], answer: "Length" },
+            { question: "The coefficient of viscosity is measured in:", options: ["N/m²", "Poise", "Joule", "Watt"], answer: "Poise" },
+            { question: "If a wave’s amplitude is doubled, its energy:", options: ["Remains the same", "Doubles", "Becomes four times", "Becomes half"], answer: "Becomes four times" },
+            { question: "What is the velocity ratio of a simple machine if the input distance is 2m and output distance is 0.5m?", options: ["2", "4", "1", "0.25"], answer: "4" }
+        ];
+
+        function loadQuiz() {
+            let quizContainer = document.getElementById("quiz-container");
+            quizContainer.innerHTML = "";
+            quizData.forEach((q, index) => {
+                let questionDiv = document.createElement("div");
+                questionDiv.className = "question-container";
+                questionDiv.innerHTML = `<h3>${index + 1}. ${q.question}</h3>`;
+                q.options.forEach(option => {
+                    let optionBtn = document.createElement("button");
+                    optionBtn.className = "option";
+                    optionBtn.innerText = option;
+                    optionBtn.onclick = function () {
+                        checkAnswer(optionBtn, option, q.answer, index);
+                    };
+                    optionBtn.dataset.questionIndex = index;
+                    questionDiv.appendChild(optionBtn);
+                });
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        function checkAnswer(button, selected, correct, questionIndex) {
+            let buttons = document.querySelectorAll(`.option[data-question-index='${questionIndex}']`);
+            buttons.forEach(btn => btn.classList.add("selected")); // Disable after selection
+            if (selected === correct) {
+                button.classList.add("correct");
+            } else {
+                button.classList.add("wrong");
+            }
+        }
+
+        function submitQuiz() {
+            let correctCount = document.querySelectorAll(".correct").length;
+            let wrongCount = document.querySelectorAll(".wrong").length;
+            let score = (correctCount * 4) - wrongCount;
+            document.getElementById("result").innerText = "Your Score: " + score;
+            document.getElementById("message").innerText = "PARMESHWAR :- ALL THE BEST BRO...";
+        }
+
+        loadQuiz();
+    </script>
+
+</body>
+</html>
