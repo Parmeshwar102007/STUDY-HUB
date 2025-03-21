@@ -3,202 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flamingo Bird Game</title>
+    <title>Flamingo Bird</title>
     <style>
-        body {
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
             text-align: center;
-            background-color: skyblue;
-            overflow: hidden;
             font-family: Arial, sans-serif;
+            background-color: #87CEEB; /* Sky blue background */
         }
-        canvas {
-            display: block;
-            margin: auto;
-            background: url('https://i.imgur.com/XVmZJgJ.png') repeat-x;
-        }
-        #gameOver {
-            display: none;
-            position: absolute;
-            top: 30%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.8);
+        h1 {
+            margin-top: 20px;
             color: white;
-            padding: 20px;
+            text-shadow: 2px 2px 5px black;
+        }
+        .game-container {
+            position: relative;
+            width: 400px;
+            height: 500px;
+            background: url('https://i.imgur.com/LGzK54M.png') no-repeat center/cover; /* More attractive background */
+            margin: 20px auto;
+            overflow: hidden;
+            border: 3px solid black;
             border-radius: 10px;
-            text-align: center;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
         }
-        #restart {
-            padding: 10px 20px;
-            background: orange;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        #score {
+        .bird {
+            width: 40px;
+            height: 40px;
+            background: url('https://i.imgur.com/NdIG8tM.png') no-repeat center/cover; /* Bird sprite */
             position: absolute;
-            top: 20px;
+            top: 50%;
+            left: 50px;
+        }
+        .pipe {
+            position: absolute;
+            width: 50px;
+            background: url('https://i.imgur.com/mr1QdzP.png') no-repeat center/cover; /* Pipe sprite */
+        }
+        .top {
+            height: 200px;
+            top: 0;
+        }
+        .bottom {
+            height: 200px;
+            bottom: 0;
+        }
+        .score {
+            position: absolute;
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
             font-size: 24px;
             font-weight: bold;
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.7);
             padding: 5px 15px;
             border-radius: 5px;
         }
     </style>
 </head>
 <body>
-
-    <canvas id="gameCanvas"></canvas>
-    <div id="score">Score: 0</div>
-    <div id="gameOver">
-        <h2>Game Over</h2>
-        <p>Your Score: <span id="finalScore"></span></p>
-        <button id="restart">Restart</button>
+    <h1>Flamingo Bird</h1>
+    <div class="game-container" id="game">
+        <div class="bird" id="bird"></div>
+        <div class="score" id="score">0</div>
     </div>
 
     <script>
-        const canvas = document.getElementById("gameCanvas");
-        const ctx = canvas.getContext("2d");
-
-        const gameOverScreen = document.getElementById("gameOver");
-        const finalScoreText = document.getElementById("finalScore");
-        const restartBtn = document.getElementById("restart");
-        const scoreText = document.getElementById("score");
-
-        canvas.width = 400;
-        canvas.height = 500;
-
-        let flamingoImg = new Image();
-        flamingoImg.src = "https://i.imgur.com/nPqprX9.png"; // Flamingo Sprite
-
-        let pipeTop = new Image();
-        pipeTop.src = "https://i.imgur.com/yUplM64.png"; // Pipe Top
-        let pipeBottom = new Image();
-        pipeBottom.src = "https://i.imgur.com/UZYpER5.png"; // Pipe Bottom
-
-        let bg = new Image();
-        bg.src = "https://i.imgur.com/zvUTZqp.png"; // Background Image
-
-        let flamingo = {
-            x: 50,
-            y: 150,
-            width: 40,
-            height: 40,
-            gravity: 1.5,
-            velocity: 0
-        };
-
+        const bird = document.getElementById("bird");
+        const gameContainer = document.getElementById("game");
+        const scoreDisplay = document.getElementById("score");
+        let gravity = 1.5;  // Reduced bird speed
+        let velocity = 0;
+        let isGameOver = false;
         let pipes = [];
         let score = 0;
-        let gameRunning = true;
 
-        function resetGame() {
-            flamingo.y = 150;
-            flamingo.velocity = 0;
-            pipes = [];
-            score = 0;
-            gameRunning = true;
-            gameOverScreen.style.display = "none";
-            scoreText.innerText = "Score: 0";
-            loop();
+        document.addEventListener("keydown", () => {
+            if (!isGameOver) velocity = -10; // Jump effect
+        });
+
+        function createPipe() {
+            if (isGameOver) return;
+
+            let pipeGap = 150;
+            let randomHeight = Math.random() * 200 + 50;
+            let topPipe = document.createElement("div");
+            let bottomPipe = document.createElement("div");
+
+            topPipe.classList.add("pipe", "top");
+            bottomPipe.classList.add("pipe", "bottom");
+
+            topPipe.style.height = randomHeight + "px";
+            bottomPipe.style.height = (400 - randomHeight - pipeGap) + "px";
+
+            topPipe.style.left = "400px";
+            bottomPipe.style.left = "400px";
+
+            gameContainer.appendChild(topPipe);
+            gameContainer.appendChild(bottomPipe);
+            pipes.push({ topPipe, bottomPipe });
+
+            setTimeout(createPipe, 2000); // Adjust pipe generation timing
         }
 
-        document.addEventListener("keydown", flap);
-        document.addEventListener("click", flap);
-        document.addEventListener("touchstart", flap);
+        function updateGame() {
+            if (isGameOver) return;
 
-        function flap() {
-            if (!gameRunning) return;
-            flamingo.velocity = -8;
-        }
+            velocity += gravity;
+            bird.style.top = bird.offsetTop + velocity + "px";
 
-        function generatePipes() {
-            let gap = 120;
-            let randomY = Math.floor(Math.random() * 150) + 50;
-            pipes.push({
-                x: canvas.width,
-                y: randomY,
-                width: 50,
-                height: 200,
-                speed: 2
-            });
-        }
+            pipes.forEach(pipePair => {
+                pipePair.topPipe.style.left = pipePair.topPipe.offsetLeft - 2 + "px";
+                pipePair.bottomPipe.style.left = pipePair.bottomPipe.offsetLeft - 2 + "px";
 
-        function update() {
-            if (!gameRunning) return;
+                if (pipePair.topPipe.offsetLeft < -50) {
+                    pipePair.topPipe.remove();
+                    pipePair.bottomPipe.remove();
+                    pipes.shift();
+                    score++;
+                    scoreDisplay.innerText = score;
+                }
 
-            flamingo.velocity += flamingo.gravity;
-            flamingo.y += flamingo.velocity;
-
-            if (flamingo.y + flamingo.height > canvas.height) {
-                gameOver();
-            }
-
-            if (flamingo.y < 0) {
-                gameOver();
-            }
-
-            for (let i = 0; i < pipes.length; i++) {
-                pipes[i].x -= pipes[i].speed;
-
-                if (
-                    flamingo.x < pipes[i].x + pipes[i].width &&
-                    flamingo.x + flamingo.width > pipes[i].x &&
-                    (flamingo.y < pipes[i].y || flamingo.y + flamingo.height > pipes[i].y + 120)
-                ) {
+                if (checkCollision(pipePair.topPipe) || checkCollision(pipePair.bottomPipe) || bird.offsetTop >= 460) {
                     gameOver();
                 }
+            });
 
-                if (pipes[i].x === 50) {
-                    score++;
-                    scoreText.innerText = "Score: " + score;
-                }
-
-                if (pipes[i].x + pipes[i].width < 0) {
-                    pipes.splice(i, 1);
-                }
-            }
-
-            if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 200) {
-                generatePipes();
-            }
+            requestAnimationFrame(updateGame);
         }
 
-        function draw() {
-            ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
-
-            ctx.drawImage(flamingoImg, flamingo.x, flamingo.y, flamingo.width, flamingo.height);
-
-            for (let i = 0; i < pipes.length; i++) {
-                ctx.drawImage(pipeTop, pipes[i].x, pipes[i].y - pipes[i].height, pipes[i].width, pipes[i].height);
-                ctx.drawImage(pipeBottom, pipes[i].x, pipes[i].y + 120, pipes[i].width, pipes[i].height);
-            }
-        }
-
-        function loop() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            update();
-            draw();
-            if (gameRunning) {
-                requestAnimationFrame(loop);
-            }
+        function checkCollision(pipe) {
+            let birdRect = bird.getBoundingClientRect();
+            let pipeRect = pipe.getBoundingClientRect();
+            return (
+                birdRect.left < pipeRect.left + pipeRect.width &&
+                birdRect.left + birdRect.width > pipeRect.left &&
+                birdRect.top < pipeRect.top + pipeRect.height &&
+                birdRect.height + birdRect.top > pipeRect.top
+            );
         }
 
         function gameOver() {
-            gameRunning = false;
-            gameOverScreen.style.display = "block";
-            finalScoreText.innerText = score;
+            isGameOver = true;
+            alert("Game Over! Your score: " + score);
+            location.reload();
         }
 
-        restartBtn.addEventListener("click", resetGame);
-
-        loop();
+        createPipe();
+        updateGame();
     </script>
-
 </body>
 </html>
