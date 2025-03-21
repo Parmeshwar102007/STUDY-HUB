@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flamingo Bird Game</title>
+    <style>
+        body {
+            margin: 0;
+            text-align: center;
+            background: linear-gradient(to bottom, #87CEEB, #FFDAB9);
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        canvas {
+            display: block;
+            margin: auto;
+            background: url('https://www.publicdomainpictures.net/pictures/320000/velka/flamingo-bird.jpg') center/cover;
+            border: 2px solid black;
+        }
+        h1 {
+            margin-top: 10px;
+            font-size: 30px;
+        }
+        .info {
+            font-size: 18px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Flamingo Bird Game</h1>
+    <p class="info">Tap anywhere to jump!</p>
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = 400;
+        canvas.height = 500;
+
+        let flamingo = {
+            x: 50,
+            y: canvas.height / 2,
+            width: 40,
+            height: 40,
+            gravity: 0.5,
+            lift: -8, 
+            velocity: 0
+        };
+
+        let pipes = [];
+        let frame = 0;
+        let score = 0;
+        let gameOver = false;
+        let flamingoImg = new Image();
+        flamingoImg.src = "https://upload.wikimedia.org/wikipedia/commons/3/3e/American_Flamingo.jpg"; // Flamingo image
+
+        function drawFlamingo() {
+            ctx.drawImage(flamingoImg, flamingo.x, flamingo.y, flamingo.width, flamingo.height);
+        }
+
+        function drawPipes() {
+            for (let i = 0; i < pipes.length; i++) {
+                ctx.fillStyle = "#228B22";
+                ctx.fillRect(pipes[i].x, 0, pipes[i].width, pipes[i].top);
+                ctx.fillRect(pipes[i].x, pipes[i].bottom, pipes[i].width, canvas.height - pipes[i].bottom);
+            }
+        }
+
+        function updatePipes() {
+            if (frame % 90 === 0) {
+                let gap = 130;
+                let topHeight = Math.floor(Math.random() * (canvas.height - gap - 100) + 50);
+                pipes.push({
+                    x: canvas.width,
+                    width: 50,
+                    top: topHeight,
+                    bottom: topHeight + gap
+                });
+            }
+            for (let i = 0; i < pipes.length; i++) {
+                pipes[i].x -= 2;
+                if (pipes[i].x + pipes[i].width < 0) {
+                    pipes.splice(i, 1);
+                    score++;
+                }
+            }
+        }
+
+        function detectCollision() {
+            for (let i = 0; i < pipes.length; i++) {
+                if (
+                    flamingo.x < pipes[i].x + pipes[i].width &&
+                    flamingo.x + flamingo.width > pipes[i].x &&
+                    (flamingo.y < pipes[i].top || flamingo.y + flamingo.height > pipes[i].bottom)
+                ) {
+                    gameOver = true;
+                }
+            }
+            if (flamingo.y + flamingo.height >= canvas.height) {
+                gameOver = true;
+            }
+        }
+
+        function updateFlamingo() {
+            flamingo.velocity += flamingo.gravity;
+            flamingo.y += flamingo.velocity;
+            if (flamingo.y < 0) flamingo.y = 0;
+        }
+
+        function drawScore() {
+            ctx.fillStyle = "black";
+            ctx.font = "24px Arial";
+            ctx.fillText("Score: " + score, 10, 30);
+        }
+
+        function loop() {
+            if (!gameOver) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawPipes();
+                drawFlamingo();
+                drawScore();
+                updatePipes();
+                updateFlamingo();
+                detectCollision();
+                frame++;
+                requestAnimationFrame(loop);
+            } else {
+                ctx.fillStyle = "red";
+                ctx.font = "36px Arial";
+                ctx.fillText("Game Over!", 120, 250);
+                ctx.font = "24px Arial";
+                ctx.fillText("Score: " + score, 160, 290);
+                ctx.fillText("Tap to Restart", 130, 330);
+            }
+        }
+
+        function jump() {
+            if (!gameOver) {
+                flamingo.velocity = flamingo.lift;
+            } else {
+                restartGame();
+            }
+        }
+
+        function restartGame() {
+            gameOver = false;
+            flamingo.y = canvas.height / 2;
+            flamingo.velocity = 0;
+            pipes = [];
+            score = 0;
+            frame = 0;
+            loop();
+        }
+
+        document.addEventListener("keydown", function (event) {
+            if (event.code === "Space") {
+                jump();
+            }
+        });
+
+        document.addEventListener("click", jump);
+        document.addEventListener("touchstart", jump); // Touch-friendly tap support
+
+        loop();
+    </script>
+</body>
+</html>
