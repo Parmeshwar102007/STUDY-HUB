@@ -8,163 +8,197 @@
         body {
             margin: 0;
             text-align: center;
-            background: linear-gradient(to bottom, #87CEEB, #FFDAB9);
+            background-color: skyblue;
+            overflow: hidden;
             font-family: Arial, sans-serif;
-            color: white;
         }
         canvas {
             display: block;
             margin: auto;
-            background: url('https://www.publicdomainpictures.net/pictures/320000/velka/flamingo-bird.jpg') center/cover;
-            border: 2px solid black;
+            background: url('https://i.imgur.com/XVmZJgJ.png') repeat-x;
         }
-        h1 {
-            margin-top: 10px;
-            font-size: 30px;
+        #gameOver {
+            display: none;
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
         }
-        .info {
-            font-size: 18px;
-            margin: 5px;
+        #restart {
+            padding: 10px 20px;
+            background: orange;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #score {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 5px 15px;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-    <h1>Flamingo Bird Game</h1>
-    <p class="info">Tap anywhere to jump!</p>
+
     <canvas id="gameCanvas"></canvas>
+    <div id="score">Score: 0</div>
+    <div id="gameOver">
+        <h2>Game Over</h2>
+        <p>Your Score: <span id="finalScore"></span></p>
+        <button id="restart">Restart</button>
+    </div>
 
     <script>
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
+        const gameOverScreen = document.getElementById("gameOver");
+        const finalScoreText = document.getElementById("finalScore");
+        const restartBtn = document.getElementById("restart");
+        const scoreText = document.getElementById("score");
+
         canvas.width = 400;
         canvas.height = 500;
 
+        let flamingoImg = new Image();
+        flamingoImg.src = "https://i.imgur.com/nPqprX9.png"; // Flamingo Sprite
+
+        let pipeTop = new Image();
+        pipeTop.src = "https://i.imgur.com/yUplM64.png"; // Pipe Top
+        let pipeBottom = new Image();
+        pipeBottom.src = "https://i.imgur.com/UZYpER5.png"; // Pipe Bottom
+
+        let bg = new Image();
+        bg.src = "https://i.imgur.com/zvUTZqp.png"; // Background Image
+
         let flamingo = {
             x: 50,
-            y: canvas.height / 2,
+            y: 150,
             width: 40,
             height: 40,
-            gravity: 0.5,
-            lift: -8, 
+            gravity: 1.5,
             velocity: 0
         };
 
         let pipes = [];
-        let frame = 0;
         let score = 0;
-        let gameOver = false;
-        let flamingoImg = new Image();
-        flamingoImg.src = "https://upload.wikimedia.org/wikipedia/commons/3/3e/American_Flamingo.jpg"; // Flamingo image
+        let gameRunning = true;
 
-        function drawFlamingo() {
-            ctx.drawImage(flamingoImg, flamingo.x, flamingo.y, flamingo.width, flamingo.height);
-        }
-
-        function drawPipes() {
-            for (let i = 0; i < pipes.length; i++) {
-                ctx.fillStyle = "#228B22";
-                ctx.fillRect(pipes[i].x, 0, pipes[i].width, pipes[i].top);
-                ctx.fillRect(pipes[i].x, pipes[i].bottom, pipes[i].width, canvas.height - pipes[i].bottom);
-            }
-        }
-
-        function updatePipes() {
-            if (frame % 90 === 0) {
-                let gap = 130;
-                let topHeight = Math.floor(Math.random() * (canvas.height - gap - 100) + 50);
-                pipes.push({
-                    x: canvas.width,
-                    width: 50,
-                    top: topHeight,
-                    bottom: topHeight + gap
-                });
-            }
-            for (let i = 0; i < pipes.length; i++) {
-                pipes[i].x -= 2;
-                if (pipes[i].x + pipes[i].width < 0) {
-                    pipes.splice(i, 1);
-                    score++;
-                }
-            }
-        }
-
-        function detectCollision() {
-            for (let i = 0; i < pipes.length; i++) {
-                if (
-                    flamingo.x < pipes[i].x + pipes[i].width &&
-                    flamingo.x + flamingo.width > pipes[i].x &&
-                    (flamingo.y < pipes[i].top || flamingo.y + flamingo.height > pipes[i].bottom)
-                ) {
-                    gameOver = true;
-                }
-            }
-            if (flamingo.y + flamingo.height >= canvas.height) {
-                gameOver = true;
-            }
-        }
-
-        function updateFlamingo() {
-            flamingo.velocity += flamingo.gravity;
-            flamingo.y += flamingo.velocity;
-            if (flamingo.y < 0) flamingo.y = 0;
-        }
-
-        function drawScore() {
-            ctx.fillStyle = "black";
-            ctx.font = "24px Arial";
-            ctx.fillText("Score: " + score, 10, 30);
-        }
-
-        function loop() {
-            if (!gameOver) {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                drawPipes();
-                drawFlamingo();
-                drawScore();
-                updatePipes();
-                updateFlamingo();
-                detectCollision();
-                frame++;
-                requestAnimationFrame(loop);
-            } else {
-                ctx.fillStyle = "red";
-                ctx.font = "36px Arial";
-                ctx.fillText("Game Over!", 120, 250);
-                ctx.font = "24px Arial";
-                ctx.fillText("Score: " + score, 160, 290);
-                ctx.fillText("Tap to Restart", 130, 330);
-            }
-        }
-
-        function jump() {
-            if (!gameOver) {
-                flamingo.velocity = flamingo.lift;
-            } else {
-                restartGame();
-            }
-        }
-
-        function restartGame() {
-            gameOver = false;
-            flamingo.y = canvas.height / 2;
+        function resetGame() {
+            flamingo.y = 150;
             flamingo.velocity = 0;
             pipes = [];
             score = 0;
-            frame = 0;
+            gameRunning = true;
+            gameOverScreen.style.display = "none";
+            scoreText.innerText = "Score: 0";
             loop();
         }
 
-        document.addEventListener("keydown", function (event) {
-            if (event.code === "Space") {
-                jump();
-            }
-        });
+        document.addEventListener("keydown", flap);
+        document.addEventListener("click", flap);
+        document.addEventListener("touchstart", flap);
 
-        document.addEventListener("click", jump);
-        document.addEventListener("touchstart", jump); // Touch-friendly tap support
+        function flap() {
+            if (!gameRunning) return;
+            flamingo.velocity = -8;
+        }
+
+        function generatePipes() {
+            let gap = 120;
+            let randomY = Math.floor(Math.random() * 150) + 50;
+            pipes.push({
+                x: canvas.width,
+                y: randomY,
+                width: 50,
+                height: 200,
+                speed: 2
+            });
+        }
+
+        function update() {
+            if (!gameRunning) return;
+
+            flamingo.velocity += flamingo.gravity;
+            flamingo.y += flamingo.velocity;
+
+            if (flamingo.y + flamingo.height > canvas.height) {
+                gameOver();
+            }
+
+            if (flamingo.y < 0) {
+                gameOver();
+            }
+
+            for (let i = 0; i < pipes.length; i++) {
+                pipes[i].x -= pipes[i].speed;
+
+                if (
+                    flamingo.x < pipes[i].x + pipes[i].width &&
+                    flamingo.x + flamingo.width > pipes[i].x &&
+                    (flamingo.y < pipes[i].y || flamingo.y + flamingo.height > pipes[i].y + 120)
+                ) {
+                    gameOver();
+                }
+
+                if (pipes[i].x === 50) {
+                    score++;
+                    scoreText.innerText = "Score: " + score;
+                }
+
+                if (pipes[i].x + pipes[i].width < 0) {
+                    pipes.splice(i, 1);
+                }
+            }
+
+            if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 200) {
+                generatePipes();
+            }
+        }
+
+        function draw() {
+            ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
+
+            ctx.drawImage(flamingoImg, flamingo.x, flamingo.y, flamingo.width, flamingo.height);
+
+            for (let i = 0; i < pipes.length; i++) {
+                ctx.drawImage(pipeTop, pipes[i].x, pipes[i].y - pipes[i].height, pipes[i].width, pipes[i].height);
+                ctx.drawImage(pipeBottom, pipes[i].x, pipes[i].y + 120, pipes[i].width, pipes[i].height);
+            }
+        }
+
+        function loop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            update();
+            draw();
+            if (gameRunning) {
+                requestAnimationFrame(loop);
+            }
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            gameOverScreen.style.display = "block";
+            finalScoreText.innerText = score;
+        }
+
+        restartBtn.addEventListener("click", resetGame);
 
         loop();
     </script>
+
 </body>
 </html>
