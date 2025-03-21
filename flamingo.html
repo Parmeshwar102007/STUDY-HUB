@@ -24,7 +24,7 @@
             position: relative;
             width: 400px;
             height: 500px;
-            background: url('https://i.imgur.com/LGzK54M.png') no-repeat center/cover; /* More attractive background */
+            background: url('https://i.imgur.com/LGzK54M.png') no-repeat center/cover;
             margin: 20px auto;
             overflow: hidden;
             border: 3px solid black;
@@ -32,17 +32,17 @@
             box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
         }
         .bird {
-            width: 40px;
-            height: 40px;
-            background: url('https://i.imgur.com/NdIG8tM.png') no-repeat center/cover; /* Bird sprite */
+            width: 50px;
+            height: 50px;
+            background: url('YOUR_BIRD_IMAGE_URL') no-repeat center/cover;
             position: absolute;
             top: 50%;
             left: 50px;
         }
         .pipe {
             position: absolute;
-            width: 50px;
-            background: url('https://i.imgur.com/mr1QdzP.png') no-repeat center/cover; /* Pipe sprite */
+            width: 60px;
+            background: blue; /* Blue pipe */
         }
         .top {
             height: 200px;
@@ -76,14 +76,14 @@
         const bird = document.getElementById("bird");
         const gameContainer = document.getElementById("game");
         const scoreDisplay = document.getElementById("score");
-        let gravity = 1.5;  // Reduced bird speed
+        let gravity = 1.5;
         let velocity = 0;
         let isGameOver = false;
         let pipes = [];
         let score = 0;
 
         document.addEventListener("keydown", () => {
-            if (!isGameOver) velocity = -10; // Jump effect
+            if (!isGameOver) velocity = -10;
         });
 
         function createPipe() {
@@ -107,7 +107,7 @@
             gameContainer.appendChild(bottomPipe);
             pipes.push({ topPipe, bottomPipe });
 
-            setTimeout(createPipe, 2000); // Adjust pipe generation timing
+            setTimeout(createPipe, 2000);
         }
 
         function updateGame() {
