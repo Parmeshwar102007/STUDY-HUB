@@ -76,20 +76,22 @@
         const bird = document.getElementById("bird");
         const gameContainer = document.getElementById("game");
         const scoreDisplay = document.getElementById("score");
-        let gravity = 1.2;
+        let gravity = 0.8; // Reduced gravity for smoother movement
         let velocity = 0;
         let isGameOver = false;
         let pipes = [];
         let score = 0;
+        let pipeSpeed = 1.5; // Slowed down pipe movement
+        let flapStrength = -6; // Adjusted for better control
 
         document.addEventListener("keydown", () => {
-            if (!isGameOver) velocity = -8; // Flap strength increased
+            if (!isGameOver) velocity = flapStrength;
         });
 
         function createPipe() {
             if (isGameOver) return;
 
-            let pipeGap = 150;
+            let pipeGap = 160; // Increased gap for easier gameplay
             let randomHeight = Math.random() * 200 + 50;
             let topPipe = document.createElement("div");
             let bottomPipe = document.createElement("div");
@@ -107,7 +109,7 @@
             gameContainer.appendChild(bottomPipe);
             pipes.push({ topPipe, bottomPipe });
 
-            setTimeout(createPipe, 1800);
+            setTimeout(createPipe, 2000); // Pipes spawn slower
         }
 
         function updateGame() {
@@ -117,8 +119,8 @@
             bird.style.top = bird.offsetTop + velocity + "px";
 
             pipes.forEach(pipePair => {
-                pipePair.topPipe.style.left = pipePair.topPipe.offsetLeft - 2 + "px";
-                pipePair.bottomPipe.style.left = pipePair.bottomPipe.offsetLeft - 2 + "px";
+                pipePair.topPipe.style.left = pipePair.topPipe.offsetLeft - pipeSpeed + "px";
+                pipePair.bottomPipe.style.left = pipePair.bottomPipe.offsetLeft - pipeSpeed + "px";
 
                 if (pipePair.topPipe.offsetLeft < -50) {
                     pipePair.topPipe.remove();
